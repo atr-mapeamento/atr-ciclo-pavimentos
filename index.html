@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ciclo entre pavimentos Atmos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ultra&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Padrão EngePro (referência: Estudo de Layout Jaguacy): cabeçalho azul-marinho com filete degradê,
+   menu lateral, títulos em Ultra, texto em Poppins, cartões brancos com borda azul clara.
+   O amarelo da página anterior fica só como destaque (números, foco, concretagem, "Leitura EngePro"). */
+:root{
+  --navy-950:#0C102C; --navy-900:#12163A; --navy-800:#15214A; --royal-700:#214981; --steel-600:#3A67AA;
+  --sky-400:#80A6DE; --sky-200:#C6D7F0; --sky-100:#E8EFFA; --sky-50:#F3F7FC;
+  --bg:#F4F6FB; --surface:#FFFFFF; --ink:#15214A; --ink-soft:#3E4A6B; --muted:#6C7897;
+  --line:#DFE6F2; --line-strong:#C7D2E6;
+  --yellow:#FFDE59; --yellow-deep:#E8B800;
+  --red:#D23F35; --green:#1F9D6C;
+  --c-pilares:#214981; --c-deck:#0F7F8C; --c-armacao:#80A6DE;
+  --sidebar-w:296px; --header-h:80px;
+  --r-sm:6px; --r-md:10px; --r-lg:14px;
+  --shadow-sm:0 1px 2px rgba(18,22,58,.06),0 1px 3px rgba(18,22,58,.04);
+  --shadow-md:0 2px 6px rgba(18,22,58,.07),0 6px 18px rgba(18,22,58,.07);
+  --shadow-lg:0 10px 40px rgba(18,22,58,.16);
+  --font:'Poppins','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+  --display:'Ultra','Rockwell Extra Bold','Arial Black',Georgia,serif;
+  /* apelidos usados em trechos inline */
+  --navy:var(--navy-800); --ink-2:var(--ink-soft); --indigo:var(--c-pilares); --teal:var(--c-deck);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{font-family:var(--font);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow:hidden;font-size:15px;line-height:1.6;font-weight:400}
+h1,h2,h3,h4{margin:0;line-height:1.25;color:var(--navy-800)}
+p,ul,ol,dl,dd,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:var(--royal-700)}
+button{font-family:inherit;color:inherit;cursor:pointer}
+::selection{background:rgba(128,166,222,.35)}
+:focus-visible{outline:2px solid var(--steel-600);outline-offset:2px;border-radius:4px}
+.mono{font-variant-numeric:tabular-nums}
+
+.app{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr);grid-template-rows:var(--header-h) minmax(0,1fr);grid-template-areas:'header header' 'nav main';height:100vh;height:100dvh;overflow:hidden}
+
+/* ===== cabeçalho ===== */
+.header{grid-area:header;position:relative;display:flex;align-items:center;gap:16px;padding:0 22px;min-width:0;background:linear-gradient(112deg,var(--navy-950) 0%,var(--navy-900) 46%,#1B2C5E 100%)}
+.header::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,var(--navy-900) 0%,var(--navy-800) 25%,var(--royal-700) 50%,var(--steel-600) 75%,var(--sky-400) 100%) left bottom/100% 3px no-repeat}
+.header>*{position:relative;z-index:1}
+.header-titles{min-width:0;flex:1;border-left:4px solid var(--sky-400);padding-left:14px}
+.header-kicker{font-size:10.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:#A9C6F2;line-height:1.4}
+.header-title{font-family:var(--display);font-size:17px;font-weight:400;text-transform:uppercase;letter-spacing:.045em;color:#fff;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brands{display:flex;align-items:center;gap:16px;flex-shrink:0;margin-left:auto}
+.brand-logo{display:block;height:36px;width:auto;background:#fff;border-radius:8px;padding:4px 10px;box-shadow:0 2px 10px rgba(12,16,44,.35)}
+.client{display:flex;flex-direction:column;justify-content:center;padding-left:16px;border-left:1px solid rgba(255,255,255,.18);line-height:1.3}
+.client b{font-size:13px;font-weight:700;color:#fff;letter-spacing:.02em}
+.client span{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#A9C6F2}
+.tool{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;min-width:32px;padding:0 8px;background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-sm);color:var(--ink-soft);font-size:12.5px;transition:background-color .13s,border-color .13s,color .13s}
+.tool:hover{background:var(--sky-100);border-color:var(--steel-600);color:var(--royal-700)}
+.tool svg{width:15px;height:15px}
+.tool.wide{padding:0 11px}
+.menu-btn{display:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.26);color:#DCE7F8;height:34px;min-width:34px}
+.menu-btn:hover{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.26)}
+.menu-btn svg{width:18px;height:18px}
+
+/* ===== menu lateral ===== */
+.nav{grid-area:nav;display:flex;flex-direction:column;background:var(--navy-900);overflow-y:auto;overflow-x:hidden;padding-bottom:18px}
+.nav::-webkit-scrollbar{width:8px}
+.nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:4px}
+.nav-top{padding:16px 16px 10px;flex-shrink:0}
+.nav-top .et{font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#7F92B8}
+.nav-top .tt{font-size:12.5px;font-weight:600;color:#DCE7F8;line-height:1.5;margin-top:3px}
+.nav-group{padding:12px 16px 4px 16px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7F92B8}
+.nav-item{display:flex;align-items:center;gap:11px;width:100%;padding:9px 16px;background:none;border:0;border-left:3px solid transparent;color:#BECCE8;font-size:13px;font-weight:600;text-align:left;line-height:1.35;transition:background-color .13s,color .13s}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item .num{min-width:21px;height:21px;display:inline-flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;border-radius:50%;background:rgba(255,255,255,.12);color:#DCE7F8;flex-shrink:0}
+.nav-item .txt{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.nav-item .count{margin-left:auto;font-size:11px;font-weight:600;color:#9DB2D6;background:rgba(255,255,255,.1);padding:2px 7px;border-radius:20px}
+.nav-item.current{background:rgba(128,166,222,.18);border-left-color:var(--sky-400);color:#fff}
+.nav-item.current .num{background:var(--yellow);color:var(--navy-950)}
+.nav-foot{margin-top:auto;padding:16px 16px 14px;flex-shrink:0}
+.foot-row{display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
+.foot-logo-img{display:block;width:92px;height:auto;background:#fff;border-radius:7px;padding:5px 9px;opacity:.95}
+.foot-id{line-height:1.45}
+.foot-id b{display:block;font-size:11.5px;font-weight:700;color:#fff;letter-spacing:.03em}
+.foot-id span{display:block;font-size:10px;color:#8FA3CC}
+.scrim{display:none}
+
+/* ===== área principal ===== */
+.main{grid-area:main;position:relative;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;min-width:0;min-height:0}
+.toolbar{display:flex;align-items:center;gap:8px;padding:9px 18px;background:var(--surface);border-bottom:1px solid var(--line);flex-shrink:0;min-height:50px}
+.crumbs{display:flex;align-items:center;gap:7px;font-size:13px;min-width:0;flex:1;flex-wrap:wrap}
+.crumbs .crumb{color:var(--muted)}
+.crumbs .now{color:var(--ink);font-weight:600}
+.crumbs .sep{color:var(--line-strong);flex-shrink:0}
+.tools{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;position:relative}
+.scroll::-webkit-scrollbar{width:10px}
+.scroll::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:99px;border:2px solid var(--bg)}
+.page{max-width:1180px;margin:0 auto;padding:26px 28px 70px}
+.sec{scroll-margin-top:8px}
+.sec+.sec{margin-top:44px;padding-top:40px;border-top:1px solid var(--line)}
+.sec-head{display:flex;flex-direction:column;gap:8px;max-width:820px;margin-bottom:24px;border-left:4px solid var(--sky-400);padding-left:14px}
+.sec-head.sub{margin-top:44px;margin-bottom:18px}
+.eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);line-height:1.4}
+.sec-head h2{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:.03em;text-transform:uppercase;color:var(--navy-800);line-height:1.3}
+.sec-head p{font-size:13.5px;color:var(--ink-soft);line-height:1.65;max-width:78ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);padding:20px}
+.note{font-size:12.5px;color:var(--ink-soft);line-height:1.55}
+
+/* abertura */
+.intro{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-md);padding:28px 30px;border-top:4px solid var(--navy-800)}
+.kicker{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:var(--royal-700);background:var(--sky-100);border-radius:20px;padding:5px 12px;margin-bottom:16px}
+.intro h1{font-family:var(--display);font-weight:400;font-size:26px;letter-spacing:.03em;text-transform:uppercase;line-height:1.3;color:var(--navy-800);max-width:26ch}
+.intro h1 span{background:linear-gradient(transparent 60%,var(--yellow) 60%);padding:0 3px}
+.lead{font-size:15px;line-height:1.7;color:var(--ink-soft);max-width:68ch;margin-top:16px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 20px;border-radius:var(--r-md);font-weight:600;font-size:13px;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:background-color .13s,border-color .13s}
+.btn-y{background:var(--yellow);color:var(--navy-950);border-color:var(--yellow-deep)}
+.btn-y:hover{background:#FFE98A}
+.btn-o{background:var(--surface);color:var(--navy-800);border-color:var(--line-strong)}
+.btn-o:hover{border-color:var(--steel-600);background:var(--sky-100)}
+.hero-meta{font-size:12px;color:var(--muted);margin-top:18px;max-width:78ch}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}
+.tile{background:var(--navy-800);border-radius:var(--r-lg);border-top:3px solid var(--sky-400);padding:18px 20px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-md)}
+.tile b{font-family:var(--display);font-weight:400;font-size:38px;line-height:1;color:var(--yellow)}
+.tile span{font-size:12.5px;line-height:1.5;color:var(--sky-200)}
+.tile em{font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sky-400);margin-top:auto}
+
+/* etiquetas de confiança */
+.tag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:20px;padding:3px 9px;white-space:nowrap;line-height:1.5}
+.tag.plano{background:var(--navy-800);color:#fff}
+.tag.relato{background:var(--sky-200);color:var(--navy-800)}
+.tag.leitura{background:var(--yellow);color:var(--navy-950)}
+.tag.conf{background:transparent;color:var(--red);box-shadow:inset 0 0 0 1.5px var(--red)}
+.legend-tags{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin-bottom:16px;font-size:12.5px;color:var(--ink-soft)}
+.legend-tags span{display:inline-flex;align-items:center;gap:8px}
+
+/* ciclo em 8 etapas */
+.cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.cstep{width:100%;height:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--steel-600);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);padding:16px 16px 14px;display:flex;flex-direction:column;gap:9px;transition:transform .15s,box-shadow .15s,border-color .15s}
+.cstep:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--sky-400);border-top-color:var(--steel-600)}
+.cstep.is-on{border-top-color:var(--yellow-deep);box-shadow:0 0 0 2px var(--navy-800)}
+.cnum{width:34px;height:34px;border-radius:50%;background:var(--navy-800);color:var(--yellow);display:grid;place-items:center;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+.cstep h3{font-size:14px;font-weight:700;line-height:1.35}
+.cstep .who{font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+.cstep .when{margin-top:auto;font-size:11.5px;font-weight:600;color:var(--royal-700);font-variant-numeric:tabular-nums}
+.loop-note{margin-top:14px;font-size:13px;color:var(--ink-soft);display:flex;gap:10px;align-items:flex-start;padding:11px 14px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--steel-600);border-radius:var(--r-md)}
+.loop-note::before{content:"";flex:none;width:20px;height:20px;margin-top:1px;border-radius:50%;background:var(--yellow);box-shadow:inset 0 0 0 4px var(--yellow),inset 0 0 0 6px var(--navy-800)}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+.fact{background:var(--navy-800);border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-md)}
+.fact h4{font-size:10.5px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:.13em;line-height:1.4}
+.fact p{font-size:13px;line-height:1.6;color:var(--sky-200)}
+
+/* guia das etapas + modelo físico */
+.tabs{display:flex;flex-wrap:wrap;gap:7px;padding:10px 14px;margin-bottom:18px;background:var(--sky-50);border:1px solid var(--line);border-radius:var(--r-md)}
+.tab{display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 5px;border-radius:20px;background:var(--surface);border:1px solid var(--line-strong);font-size:12px;font-weight:600;color:var(--ink-soft);white-space:nowrap;transition:.14s}
+.tab:hover{border-color:var(--steel-600);color:var(--royal-700)}
+.tab i{font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--sky-100);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--navy-800)}
+.tab[aria-selected="true"]{background:var(--navy-800);color:#fff;border-color:var(--navy-800)}
+.tab[aria-selected="true"] i{background:var(--yellow);color:var(--navy-950)}
+.guide{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:20px;align-items:start}
+.model{position:sticky;top:4px;padding:14px}
+.model-scroll{overflow-x:auto;border-radius:var(--r-md);background:radial-gradient(circle at 1px 1px,var(--line-strong) 1px,transparent 0) 0 0/22px 22px,var(--sky-50);border:1px solid var(--line)}
+.model-scroll svg{display:block;width:100%;min-width:0;height:auto}
+.model-cap{margin-top:12px;padding:11px 14px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--steel-600);font-size:13px;line-height:1.55;color:var(--ink-soft)}
+.model-leg{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:11.5px;color:var(--ink-soft)}
+.model-leg span{display:inline-flex;align-items:center;gap:7px}
+.model-leg i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.detail{padding:24px}
+.detail h3{font-size:19px;font-weight:700;display:flex;gap:12px;align-items:center;line-height:1.3}
+.detail h3 .cnum{width:40px;height:40px;font-size:17px}
+.detail .sum{margin-top:14px;color:var(--ink-soft);font-size:14px;line-height:1.7}
+.detail h4{font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px}
+.detail ul.steps{display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.65}
+.detail ul.steps li{padding-left:18px;position:relative}
+.detail ul.steps li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:2px;background:var(--yellow-deep)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:12px;font-weight:600;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line-strong);border-radius:20px;padding:4px 12px}
+button.chip:hover{border-color:var(--steel-600);color:var(--royal-700);background:var(--sky-100)}
+.plan-box{margin-top:22px;background:var(--navy-800);border-radius:var(--r-md);padding:14px 18px;display:flex;flex-direction:column;gap:6px;border-left:4px solid var(--yellow)}
+.plan-box b{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--yellow)}
+.plan-box p{font-size:13px;line-height:1.6;color:var(--sky-200)}
+.att-box{margin-top:12px;background:var(--sky-50);border:1px solid var(--line);border-radius:var(--r-md);padding:13px 16px;display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:1.6;color:var(--ink-soft)}
+.stage-nav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.stage-nav button{min-height:36px;padding:0 16px;border-radius:var(--r-md);border:1px solid var(--line-strong);background:var(--surface);font-weight:600;font-size:12.5px;color:var(--navy-800)}
+.stage-nav button:hover:not(:disabled){background:var(--navy-800);color:#fff;border-color:var(--navy-800)}
+.stage-nav button:disabled{opacity:.4;cursor:default}
+
+/* cronograma */
+.gantt-card{padding:0;overflow-x:auto;overflow-y:hidden}
+.gantt{min-width:920px}
+.g-row{display:grid;grid-template-columns:230px repeat(var(--cols),minmax(32px,1fr));border-bottom:1px solid var(--line);align-items:stretch}
+.g-row:last-child{border-bottom:0}
+.g-head{background:var(--navy-800);border-bottom:0}
+.g-head .g-cell{min-height:0;padding:7px 0;text-align:center;font-size:10px;font-weight:600;color:var(--sky-200);border-left:1px solid rgba(255,255,255,.12);text-transform:uppercase;letter-spacing:.04em}
+.g-head .g-cell b{display:block;font-size:13px;color:#fff;letter-spacing:0}
+.g-head .g-cell.we,.g-head .g-cell.hol{background:rgba(255,255,255,.09)}
+.g-head .g-cell.hoje{box-shadow:none}
+.g-head .g-cell.hoje b{background:var(--red);color:#fff;border-radius:6px;margin:0 3px}
+.g-label{grid-row:1;grid-column:1;padding:10px 12px 10px 16px;font-size:12.5px;font-weight:600;display:flex;flex-direction:column;justify-content:center;gap:2px;color:var(--navy-800)}
+.g-label small{font-weight:400;font-size:11.5px;color:var(--muted)}
+.g-cell{min-height:46px;border-left:1px solid var(--line);grid-row:1}
+.g-cell.we{background:var(--sky-50)}
+.g-cell.hol{background:repeating-linear-gradient(45deg,#FBE6E6,#FBE6E6 4px,#F2C4C4 4px,#F2C4C4 8px)}
+.g-cell.hoje{box-shadow:inset 2px 0 0 var(--red),inset -2px 0 0 var(--red)}
+.g-bar{grid-row:1;align-self:center;height:28px;margin:0 2px;border:0;border-radius:var(--r-sm);color:#fff;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;z-index:2;display:flex;align-items:center;justify-content:center;padding:0 6px;white-space:nowrap;box-shadow:var(--shadow-sm)}
+.g-bar.ajax{background:var(--c-pilares)}
+.g-bar.infra{background:var(--c-deck)}
+.g-bar.conc{background:var(--navy-950)}
+.g-bar.prot{background:var(--yellow);color:var(--navy-950);box-shadow:inset 0 0 0 2px var(--navy-800)}
+.g-bar:hover,.g-bar.sel{outline:3px solid var(--yellow-deep);outline-offset:1px}
+.g-cell:has(.g-day){display:grid;align-items:center}
+.g-day{display:block;font-size:11.5px;font-weight:700;color:var(--navy-800);text-align:center;font-variant-numeric:tabular-nums}
+.g-day.meta{background:var(--yellow);border-radius:6px;padding:3px 0;margin:0 2px}
+.g-legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:14px;font-size:12px;color:var(--ink-soft)}
+.g-legend span{display:inline-flex;align-items:center;gap:8px}
+.g-legend i{width:18px;height:12px;border-radius:4px;display:inline-block}
+.g-cap{margin-top:12px;min-height:46px;padding:11px 16px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--steel-600);font-size:13px;color:var(--ink-soft)}
+.chain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px}
+.chain .card{display:flex;flex-direction:column;gap:8px}
+.chain b{font-family:var(--display);font-weight:400;font-size:22px;color:var(--royal-700);line-height:1.2}
+.chain h3{font-size:14px;font-weight:700}
+.chain p{font-size:13px;color:var(--ink-soft);line-height:1.6}
+
+/* simulador */
+.sim-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:20px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);padding:18px;overflow:hidden}
+.panel h3{margin:-18px -18px 16px;padding:10px 18px;background:var(--navy-800);color:#fff;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.preset{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-soft);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;transition:.14s}
+.preset:hover{border-color:var(--steel-600);color:var(--royal-700)}
+.preset.on{background:var(--navy-800);border-color:var(--navy-800);color:#fff}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+.field.full{grid-column:1/-1}
+.field input[type=number],.field input[type=date],.field select{height:42px;border-radius:var(--r-md);border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);padding:0 12px;font:600 14px var(--font);font-variant-numeric:tabular-nums;width:100%}
+.field input:focus,.field select:focus{border-color:var(--steel-600);outline:2px solid rgba(58,103,170,.25);outline-offset:0}
+.check{display:flex;gap:10px;align-items:center;font-size:13px;font-weight:600;color:var(--ink-soft)}
+.check input{width:18px;height:18px;accent-color:var(--navy-800)}
+.res-main{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.res{background:var(--navy-800);border-radius:var(--r-md);padding:13px 15px;display:flex;flex-direction:column;gap:4px;border-top:3px solid var(--sky-400)}
+.res small{font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--sky-400)}
+.res b{font-family:var(--display);font-weight:400;font-size:24px;line-height:1.15;color:var(--yellow)}
+.res span{font-size:11.5px;color:var(--sky-200);line-height:1.4}
+.res.ok b{color:#7BE0A9}
+.res.bad b{color:#FF9B8F}
+.verdict{margin-top:14px;padding:12px 16px;border-radius:var(--r-md);background:var(--sky-50);border:1px solid var(--line);border-left:4px solid var(--yellow-deep);font-size:13.5px;line-height:1.6;color:var(--ink)}
+.days{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.d{width:52px;min-height:56px;border-radius:var(--r-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:700;color:#fff;background:var(--royal-700);padding:4px 0;font-variant-numeric:tabular-nums}
+.d b{font-size:12.5px;font-weight:700}
+.d small{font-size:8.5px;font-weight:600;opacity:.9;text-transform:uppercase;letter-spacing:.03em}
+.d.pilares{background:var(--c-pilares)}
+.d.deck{background:var(--c-deck)}
+.d.armacao{background:var(--c-armacao);color:var(--navy-950)}
+.d.parada{background:var(--red)}
+.d.concretagem{background:var(--yellow);color:var(--navy-950);box-shadow:inset 0 0 0 2px var(--navy-800)}
+.d.off{background:transparent;border:1.5px dashed var(--line-strong);color:var(--muted)}
+.d.hol{background:repeating-linear-gradient(45deg,#FBE6E6,#FBE6E6 4px,#F2C4C4 4px,#F2C4C4 8px);color:#9B2C2C}
+.sim-leg{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;font-size:11.5px;color:var(--ink-soft)}
+.sim-leg span{display:inline-flex;align-items:center;gap:7px}
+.sim-leg i{width:14px;height:14px;border-radius:4px;display:inline-block}
+
+/* equipes */
+.teams{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.team{display:flex;flex-direction:column;gap:7px;padding:18px;border-left:3px solid var(--sky-400)}
+.team h3{font-size:14.5px;font-weight:700}
+.team .co{font-size:10px;font-weight:700;color:var(--royal-700);text-transform:uppercase;letter-spacing:.14em}
+.team p{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.chain-cmd{margin-top:20px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:13px;font-weight:600}
+.chain-cmd span{background:var(--navy-800);color:#fff;border-radius:20px;padding:6px 16px}
+.chain-cmd i{font-style:normal;color:var(--steel-600);font-weight:700}
+.chain-cmd small{flex-basis:100%}
+
+/* atenção */
+.att-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.att{display:flex;flex-direction:column;gap:9px;padding:18px}
+.att header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.att h3{font-size:14.5px;font-weight:700}
+.att p{font-size:13px;color:var(--ink-soft);line-height:1.65}
+.att.hot{border-top:4px solid var(--red)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin-top:20px}
+.split h3,.card>h3{font-size:15px;font-weight:700;margin-bottom:12px}
+.bullets{display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.65;color:var(--ink-soft)}
+.bullets li{padding-left:18px;position:relative}
+.bullets li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:2px;background:var(--yellow-deep)}
+.bullets b{color:var(--navy-800)}
+
+/* dados */
+.table-wrap{overflow-x:auto}
+.card.table-wrap{padding:0;overflow:hidden;border-radius:var(--r-md)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;background:var(--surface)}
+th{background:var(--navy-800);color:#fff;text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:11px 14px}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink)}
+tr:last-child td{border-bottom:0}
+tr:nth-child(even) td{background:var(--sky-50)}
+td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.floors{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.f-row{display:grid;grid-template-columns:64px minmax(0,1fr) 200px;gap:14px;align-items:center}
+.f-row>b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--navy-800)}
+.f-track{position:relative;display:flex;height:36px;border-radius:var(--r-sm)}
+.f-seg{display:grid;place-items:center;height:36px;color:#fff;font-size:11.5px;font-weight:700;min-width:0;overflow:hidden;font-variant-numeric:tabular-nums}
+.f-seg:first-child{border-radius:var(--r-sm) 0 0 var(--r-sm)}
+.f-seg:last-child{border-radius:0 var(--r-sm) var(--r-sm) 0}
+.f-seg.pilares{background:var(--c-pilares)}
+.f-seg.espera{background:repeating-linear-gradient(45deg,#C8372D,#C8372D 5px,#E2706A 5px,#E2706A 10px)}
+.f-seg.deck{background:var(--c-deck)}
+.f-seg.armacao{background:var(--c-armacao);color:var(--navy-950)}
+.f-seg.concretagem{background:var(--yellow);color:var(--navy-950)}
+.f-ref{position:absolute;top:-8px;bottom:-8px;border-left:2px dashed var(--red);z-index:2}
+.f-ref em{position:absolute;top:-18px;left:4px;font-size:9.5px;font-weight:700;font-style:normal;color:var(--red);white-space:nowrap}
+.f-end{font-size:11.5px;color:var(--muted);line-height:1.45}
+.f-end b{display:block;font-size:16px;font-weight:700;color:var(--navy-800);font-variant-numeric:tabular-nums}
+.floors-top{height:14px}
+.insight{margin-top:20px;padding:14px 18px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--yellow-deep);box-shadow:var(--shadow-sm);color:var(--ink-soft);font-size:13.5px;line-height:1.7}
+.insight b{color:var(--navy-800)}
+.dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}
+.dl div{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.dl dt{color:var(--muted)}
+.dl dd{font-weight:600;text-align:right;color:var(--navy-800)}
+
+/* próximos passos e glossário */
+.todo{display:flex;flex-direction:column;gap:12px}
+.todo li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;font-size:13px;line-height:1.65;color:var(--ink-soft)}
+.todo li::before{content:"";width:18px;height:18px;border-radius:5px;border:1.5px solid var(--steel-600);margin-top:3px}
+.gl-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.gl-bar input{height:42px;border-radius:var(--r-md);border:1px solid var(--line-strong);background:var(--surface);padding:0 16px;font:500 14px var(--font);min-width:min(340px,100%);flex:1;color:var(--ink)}
+.gl-bar input:focus{border-color:var(--steel-600);outline:2px solid rgba(58,103,170,.25)}
+.gl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gl-item{padding:14px 18px}
+.gl-item dt{font-weight:700;font-size:13.5px;color:var(--navy-800)}
+.gl-item dd{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-top:4px}
+.gl-empty{padding:18px;color:var(--ink-soft);font-size:13px}
+
+/* fontes */
+.foot{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;font-size:13px;color:var(--ink-soft)}
+.foot h4{font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.foot ul{display:flex;flex-direction:column;gap:8px;line-height:1.6}
+.foot a{color:var(--royal-700);text-underline-offset:3px}
+
+/* ===== celular e telas médias ===== */
+@media (max-width:1100px){
+  .cycle,.facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .teams,.att-grid,.chain{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:980px){
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:64px minmax(0,1fr);grid-template-areas:'header' 'main'}
+  .header{padding:0 12px;gap:10px}
+  .header-kicker{display:none}
+  .header-titles{border-left-width:3px;padding-left:10px}
+  .header-title{font-size:14px}
+  .client{display:none}
+  .brand-logo{height:30px}
+  .menu-btn{display:inline-flex}
+  .nav{position:fixed;top:0;left:0;bottom:0;width:286px;z-index:60;transform:translateX(-100%);transition:transform .22s ease;box-shadow:var(--shadow-lg)}
+  body.navopen .nav{transform:none}
+  body.navopen .scrim{display:block;position:fixed;inset:0;background:rgba(12,16,44,.5);z-index:50}
+  .toolbar{padding:8px 14px}
+  .crumbs{font-size:12px}
+  .page{padding:20px 16px 56px}
+  .guide,.sim-grid,.foot,.split{grid-template-columns:minmax(0,1fr)}
+  .model{position:static}
+}
+@media (max-width:680px){
+  .cycle,.facts,.teams,.att-grid,.chain,.gl,.dl{grid-template-columns:minmax(0,1fr)}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .res-main{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .f-row{grid-template-columns:48px minmax(0,1fr)}
+  .f-end{grid-column:2}
+  .fields{grid-template-columns:minmax(0,1fr)}
+  .intro{padding:20px 18px}
+  .intro h1{font-size:20px}
+  .tile b{font-size:30px}
+  .model-scroll svg{min-width:560px}
+  .sec+.sec{margin-top:34px;padding-top:30px}
+}
+@media (prefers-reduced-motion:reduce){.scroll{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header">
+  <button type="button" class="tool menu-btn" id="menuBtn" aria-label="Abrir menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  <div class="header-titles">
+    <div class="header-kicker">Obra Atmos · ATR Incorporadora</div>
+    <div class="header-title">Ciclo entre pavimentos</div>
+  </div>
+  <div class="brands">
+    <img class="brand-logo" src="data:image/webp;base64,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" alt="EngePro">
+    <div class="client"><b>ATR</b><span>Incorporadora</span></div>
+  </div>
+</header>
+<nav class="nav" id="nav" aria-label="Seções da página">
+  <div class="nav-top"><div class="et">Projeto ATR · Mapeamento</div><div class="tt">Ciclo da estrutura, em 8 etapas</div></div>
+  <div class="nav-group">Ciclo</div>
+<button type="button" class="nav-item" data-target="topo" data-label="Resumo"><span class="num">1</span><span class="txt">Resumo</span></button>
+<button type="button" class="nav-item" data-target="ciclo" data-label="As 8 etapas"><span class="num">2</span><span class="txt">As 8 etapas</span><span class="count">8</span></button>
+<button type="button" class="nav-item" data-target="etapas" data-label="Guia das etapas e modelo físico"><span class="num">3</span><span class="txt">Guia e modelo físico</span></button>
+<div class="nav-group">Planejamento</div>
+<button type="button" class="nav-item" data-target="cronograma" data-label="Cronograma do 6º pavimento"><span class="num">4</span><span class="txt">Cronograma do 6º</span></button>
+<button type="button" class="nav-item" data-target="simulador" data-label="Simulador de prazo"><span class="num">5</span><span class="txt">Simulador de prazo</span></button>
+<button type="button" class="nav-item" data-target="equipes" data-label="Equipes do ciclo"><span class="num">6</span><span class="txt">Equipes</span><span class="count">9</span></button>
+<div class="nav-group">Análise</div>
+<button type="button" class="nav-item" data-target="atencao" data-label="Pontos de atenção"><span class="num">7</span><span class="txt">Pontos de atenção</span></button>
+<button type="button" class="nav-item" data-target="dados" data-label="Números e dados"><span class="num">8</span><span class="txt">Números e dados</span></button>
+<button type="button" class="nav-item" data-target="proximos" data-label="Lacunas e próximos passos"><span class="num">9</span><span class="txt">Próximos passos</span></button>
+<div class="nav-group">Referência</div>
+<button type="button" class="nav-item" data-target="glossario" data-label="Glossário"><span class="num">10</span><span class="txt">Glossário</span></button>
+<button type="button" class="nav-item" data-target="fontes" data-label="Fontes"><span class="num">11</span><span class="txt">Fontes</span></button>
+
+  <div class="nav-foot"><div class="foot-row">
+    <img class="foot-logo-img" src="data:image/webp;base64,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" alt="EngePro">
+    <div class="foot-id"><b>EngePro Consultoria Jr.</b><span>Engenharia de Produção · UFPR</span></div>
+  </div></div>
+</nav>
+<div class="scrim" id="scrim"></div>
+<main class="main">
+  <div class="toolbar">
+    <div class="crumbs" aria-live="polite"><span class="crumb">EngePro</span><span class="sep">›</span><span class="crumb">Obra Atmos</span><span class="sep">›</span><span class="now" id="crumb-now">Resumo</span></div>
+    <div class="tools"><button type="button" class="tool wide" id="toTop" aria-label="Voltar ao topo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg><span>Topo</span></button></div>
+  </div>
+  <div class="scroll" id="scroll">
+    <div class="page">
+<section class="sec" id="topo">
+  <div class="intro">
+    <p class="kicker">Obra Atmos · ATR Incorporadora</p>
+    <h1>O ciclo entre pavimentos, <span>do zero ao concreto</span></h1>
+    <p class="lead">As 8 etapas que se repetem a cada laje protendida lisa, da concretagem de um pavimento até a concretagem do seguinte. Com o cronograma do 6º pavimento, um modelo físico em corte e um simulador de prazo.</p>
+    <div class="hero-cta">
+      <a class="btn btn-y" href="#etapas">Ver as etapas</a>
+      <a class="btn btn-o" href="#simulador">Simular o prazo</a>
+    </div>
+    <p class="hero-meta">1ª visita em 03/11/2026, conferida com o médio prazo e o plano semanal S64. Atualizado em 13/11/2026, com as correções e confirmações da reunião com a ATR.</p>
+  </div>
+  <div class="tiles" aria-label="Números do ciclo">
+    <div class="tile"><b>12</b><span>dias úteis, não corridos, até concretar a laje, com pé-direito baixo</span><em>Meta da obra</em></div><div class="tile"><b>15</b><span>dias úteis, não corridos, até concretar a laje, com pé-direito alto</span><em>Meta da obra</em></div><div class="tile"><b>~30</b><span>dias corridos por laje com a empreiteira anterior, segundo o engenheiro</span><em>Relato de 13/11, a confirmar</em></div><div class="tile"><b>6º</b><span>pavimento em foco: pilares começaram em 06/11 (plano: 05/11); concretagem mantida em 23/11</span><em>Plano e relato de 13/11</em></div>
+  </div>
+</section>
+
+<section class="sec" id="ciclo">
+    <div class="sec-head">
+      <p class="eyebrow">Visão geral</p>
+      <h2>Oito etapas, uma corrida de equipes em paralelo</h2>
+      <p>O ciclo da estrutura é o intervalo entre a concretagem de uma laje e a da seguinte. Repete-se a cada pavimento tipo a partir do 2º, e a obra executa estrutura e alvenaria ao mesmo tempo.</p>
+      <p>A ordem das etapas não é rígida. Sem a pressão do prazo, a obra faria uma atividade de cada vez; com ela, carpintaria e armação se revezam e a elétrica e a hidráulica entram no meio. Toque numa etapa para ver o detalhe.</p>
+    </div>
+    <ol class="cycle" id="cycle"></ol>
+    <p class="loop-note">A concretagem da etapa 7 reinicia o ciclo na etapa 0: a forma dos pilares do pavimento seguinte começa no dia útil depois dela.</p>
+
+    <div class="facts">
+      <div class="fact"><h4>Laje protendida lisa</h4><p>Cabos de aço em mangueiras azuis são tensionados depois da concretagem. Sem vigas no miolo, restam vigas só na periferia, onde há sacada, e não é preciso cortar madeirite para cada viga.</p></div>
+      <div class="fact"><h4>Sem forro</h4><p>A laje fica aparente nos apartamentos. Por isso a elétrica é embutida na própria laje, o que cria uma etapa a mais antes da concretagem.</p></div>
+      <div class="fact"><h4>Pé-direito baixo e alto</h4><p>O baixo mede 2,70 m e o alto chega a cerca de 4 m, porque a ATR vendeu a opção de mezanino. A laje mais trabalhosa é a executada sobre um pavimento de pé-direito alto.</p></div>
+      <div class="fact"><h4>Deck modular alugado</h4><p>Painéis sobre escoras, sistema que o fornecedor convenceu a obra a adotar pela facilidade de montagem. Cerca de 90% do prédio usa escoras; torres só em alguns pontos altos.</p></div>
+    </div>
+  </section>
+
+<section class="sec" id="etapas">
+    <div class="sec-head">
+      <p class="eyebrow">Guia das etapas e modelo físico</p>
+      <h2>O que acontece em cada etapa</h2>
+      <p>Escolha uma etapa. O corte ao lado mostra três pavimentos escorados e a laje nova em construção, e muda a cada etapa. Os números do plano são do 6º pavimento.</p>
+    </div>
+    <div class="legend-tags" aria-label="Como ler as etiquetas">
+      <span><span class="tag plano">Plano</span> vem do médio prazo ou do plano semanal</span>
+      <span><span class="tag relato">Relato</span> foi dito na visita</span>
+      <span><span class="tag leitura">Leitura EngePro</span> é nossa interpretação</span>
+      <span><span class="tag conf">A confirmar</span> ainda sem checagem</span>
+    </div>
+    <div class="tabs" id="tabs" role="tablist" aria-label="Etapas do ciclo"></div>
+    <div class="guide">
+      <figure class="card model">
+        <div class="model-scroll"><div id="model"></div></div>
+        <figcaption>
+          <p class="model-cap" id="model-cap" aria-live="polite"></p>
+          <div class="model-leg">
+            <span><i style="background:#FFDE59;box-shadow:inset 0 0 0 2px #15214A"></i>em foco nesta etapa</span>
+            <span><i style="background:#214981"></i>estrutura pronta</span>
+            <span><i style="background:#80A6DE"></i>escoras</span>
+            <span><i style="background:#0F7F8C"></i>armadura e instalações</span>
+          </div>
+          <p class="note" style="margin-top:10px">Esquema ilustrativo, fora de escala. Os percentuais de escoramento seguem o relato do engenheiro e podem variar conforme o projeto e a idade do concreto.</p>
+        </figcaption>
+      </figure>
+      <article class="card detail" id="detail" aria-live="polite"></article>
+    </div>
+  </section>
+
+<section class="sec" id="cronograma">
+    <div class="sec-head">
+      <p class="eyebrow">Cronograma do 6º pavimento</p>
+      <h2>Quando cada equipe entra</h2>
+      <p>Planejado no médio prazo recebido em 06/11 (MS Project), não o realizado. Toque numa barra para ver o detalhe. Fim de semana em cinza, o feriado de 20/11 hachurado e hoje, quando estiver no período, em vermelho.</p>
+    </div>
+    <div class="card gantt-card">
+      <div class="gantt" id="gantt"></div>
+    </div>
+    <div class="g-legend">
+      <span><i style="background:var(--indigo)"></i>Ajax (formas, armação, reescoramento)</span>
+      <span><i style="background:var(--navy)"></i>Concretagem (Ajax)</span>
+      <span><i style="background:var(--teal)"></i>Elioto e JPM (passagens e infras)</span>
+      <span><i style="background:var(--yellow);box-shadow:inset 0 0 0 2px var(--navy-800)"></i>Evehx (protensão)</span>
+    </div>
+    <p class="g-cap" id="g-cap" aria-live="polite">Toque numa barra para ver equipe, datas e duração.</p>
+    <div class="chain">
+      <div class="card"><b>12 dias úteis</b><h3>A sequência que manda</h3><p>Forma de pilares (2) + deck (4) + armação e cabos (5) + concretagem (1). Cada dia a mais em qualquer uma dessas etapas empurra a concretagem na mesma medida.</p></div>
+      <div class="card"><b>Em paralelo</b><h3>O que corre junto</h3><p>A viga de borda corre junto com o deck, a armação dos pilares começa com a forma, e as passagens e infras entram no último dia do deck e terminam com a armação.</p></div>
+      <div class="card"><b>26/11 e 27/11</b><h3>Depois da laje</h3><p>A protensão fica três dias úteis depois da concretagem, e o reescoramento e a limpeza vêm no dia seguinte. A forma dos pilares do 7º pavimento já começa em 24/11.</p></div>
+    </div>
+    <p class="insight"><span class="tag relato">Relato de 13/11</span><br><br>O que o engenheiro disse sobre o 6º pavimento: <b>os pilares começaram em 06/11</b>, e não em 05/11, porque o concreto de 04/11 não estava firme na quinta; <b>a forma das vigas e os arremates estão atrasados</b> e seguram o posicionamento das vigas já armadas; <b>a malha da laje entra em 16/11</b>, e não em 13/11. A concretagem segue mantida para <b>23/11</b>. Para ver o efeito de um dia a menos, ponha 06/11 como início no simulador: a conta teórica vai para 24/11.</p>
+    <p class="note" style="margin-top:16px">Calendário do médio prazo: 20/11 (Consciência Negra) é dia sem trabalho e há férias coletivas de 19/12 a 3/01. O plano semanal S64 adianta a armação dos pilares do 6º em um dia (04/11) e põe a montagem das formas de pilares em 06 e 07/11; ainda cabe antes do deck porque o plano semanal usa o sábado.</p>
+  </section>
+
+<section class="sec" id="simulador">
+    <div class="sec-head">
+      <p class="eyebrow">Simulador de prazo</p>
+      <h2>E se uma etapa demorar mais?</h2>
+      <p>Mude a duração de cada etapa e veja em que dia a laje seria concretada. O cálculo segue a sequência principal do médio prazo e o calendário da obra. É uma simulação de cenários, não uma previsão.</p>
+    </div>
+    <div class="sim-grid">
+      <div class="panel">
+        <h3>Cenário</h3>
+        <div class="presets" id="presets" role="group" aria-label="Cenários prontos"></div>
+        <div class="fields">
+          <div class="field full"><label for="in-ini">Início da forma de pilares</label><input type="date" id="in-ini" value="2026-11-05"></div>
+          <div class="field"><label for="in-fp">Forma de pilares (dias úteis)</label><input type="number" id="in-fp" min="1" max="15" step="1" value="2"></div>
+          <div class="field"><label for="in-dk">Deck e arremates (dias úteis)</label><input type="number" id="in-dk" min="1" max="20" step="1" value="4"></div>
+          <div class="field"><label for="in-ar">Armação e cabos (dias úteis)</label><input type="number" id="in-ar" min="1" max="20" step="1" value="5"></div>
+          <div class="field"><label for="in-pa">Dias parados (chuva, material, segurança)</label><input type="number" id="in-pa" min="0" max="20" step="1" value="0"></div>
+          <div class="field full"><label for="in-meta">Comparar com a meta de</label>
+            <select id="in-meta"><option value="12">12 dias úteis (pé-direito baixo)</option><option value="15">15 dias úteis (pé-direito alto)</option></select></div>
+          <label class="check full" for="in-sab"><input type="checkbox" id="in-sab"> Contar o sábado como dia de trabalho</label>
+        </div>
+        <p class="note" style="margin-top:16px">A concretagem dura 1 dia. Passagens e infras correm em paralelo com a armação e só pesam se passarem dela. A concretagem anterior (5º pavimento) está no plano semanal em 04/11.</p>
+      </div>
+      <div class="panel">
+        <h3>Resultado</h3>
+        <div id="out" aria-live="polite"></div>
+        <div class="days" id="days" aria-label="Dias do ciclo"></div>
+        <div class="sim-leg">
+          <span><i style="background:var(--indigo)"></i>Forma de pilares</span>
+          <span><i style="background:var(--teal)"></i>Deck e arremates</span>
+          <span><i style="background:var(--c-armacao)"></i>Armação e cabos</span>
+          <span><i style="background:var(--red)"></i>Parado</span>
+          <span><i style="background:var(--yellow)"></i>Concretagem</span>
+          <span><i style="background:repeating-linear-gradient(45deg,#FBE6E6,#FBE6E6 3px,#F2C4C4 3px,#F2C4C4 6px)"></i>Feriado ou férias</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section class="sec" id="equipes">
+    <div class="sec-head">
+      <p class="eyebrow">Quem faz o quê</p>
+      <h2>As equipes do ciclo</h2>
+      <p>A ATR é incorporadora e construtora: a gestão é interna e a mão de obra operacional é terceirizada. Cada empreiteiro tem um encarregado que recebe as orientações e as repassa. Os nomes das empresas vêm do plano semanal e do médio prazo.</p>
+    </div>
+    <div class="teams" id="teams"></div>
+    <div class="chain-cmd" aria-label="Caminho de um problema">
+      <span>Encarregado</span><i>→</i><span>Empreiteiro</span><i>→</i><span>Diretoria</span>
+      <small class="note">Quando um problema não se resolve com o encarregado, sobe ao empreiteiro e depois à diretoria.</small>
+    </div>
+  </section>
+
+<section class="sec" id="atencao">
+    <div class="sec-head">
+      <p class="eyebrow">Pontos de atenção</p>
+      <h2>Onde o ciclo pode atrasar</h2>
+      <p>Para o engenheiro, o que mais atrasa é a liberação do assoalho, e não as formas de pilar nem os materiais. Quase tudo abaixo é relato dele, a confirmar com observação e dados.</p>
+    </div>
+    <div class="att-grid" id="att"></div>
+    <div class="split">
+      <div class="card">
+        <h3>Segurança vai à frente da produção</h3>
+        <ul class="bullets">
+          <li>Se uma proteção falta, a atividade naquele ponto para. Isso pode aparecer como atraso nos dados que a EngePro coletar.</li>
+          <li>Na entrada: cinto com talabarte, capacete e integração rápida. O ajuste é conferido pessoa a pessoa.</li>
+          <li>Linha de vida: cabos de aço presos a postes e, em alguns pavimentos, a pilares, armados e tensionados antes de alguém subir na laje.</li>
+          <li>Telas de piso a piso dispensam o guarda-corpo. Onde não há tela, monta-se guarda-corpo.</li>
+          <li>No primeiro pavimento de pé-direito alto a ordem foi invertida: assoalho com linha de vida primeiro, vigas depois. Quem trabalha a 4 ou 5 metros não teria onde se prender.</li>
+          <li>Pelo relato de 03/11, há cerca de duas semanas a empreiteira nova passou a subir os tubos da linha de vida, por acordo. O áudio deste trecho é ruim; a confirmar.</li>
+          <li>Em 13/11 a ATR disse que o quadro de carpinteiros já está no limite do histograma de mão de obra (um cargo de pedreiro foi convertido em carpinteiro). Estuda contratar um oficial de obra, que pode atuar como pedreiro ou carpinteiro, e um servente para apoiar a segurança.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>O que mudou desde a reunião de 30/10</h3>
+        <ul class="bullets">
+          <li><b>Material.</b> Em 30/10 a ATR disse que material não atrasa. Na visita, o engenheiro citou três episódios pontuais.</li>
+          <li><b>Clima.</b> Não foi citado em 30/10. Na visita, o engenheiro confirmou que a chuva atrapalha.</li>
+          <li><b>Duração real.</b> Em 30/10, de 20 a 25 dias por pavimento; na visita, cerca de um mês. Em 13/11 o engenheiro esclareceu que a empreiteira anterior levava um mês corrido por laje, e que a meta de 12 ou 15 dias é em dias trabalhados. O médio prazo prevê 19 a 21 dias corridos entre concretagens, e o "um mês" só se comprova com as datas reais.</li>
+          <li><b>Área da laje.</b> Em 30/10, cerca de 2 mil m²; na visita, 750 m² de deck. Podem ser medidas diferentes, e nenhum cronograma traz a área.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+<section class="sec" id="dados">
+    <div class="sec-head">
+      <p class="eyebrow">Números e dados</p>
+      <h2>O que foi dito e o que está no plano</h2>
+      <p>Os prazos foram entendidos de uma fala rápida na visita e conferidos em 06/11 com o médio prazo. As atividades se sobrepõem dentro da janela do pavimento.</p>
+    </div>
+    <div class="card table-wrap" style="padding:0;overflow:hidden">
+      <div class="table-wrap">
+      <table>
+        <thead><tr><th>Atividade do 6º pavimento</th><th>Citado na visita</th><th>No médio prazo</th></tr></thead>
+        <tbody>
+          <tr><td>Forma dos pilares</td><td>2 dias</td><td class="mono">2 dias (05 e 06/11)</td></tr>
+          <tr><td>Armação dos pilares</td><td>3 dias</td><td class="mono">3 dias (05 a 09/11)</td></tr>
+          <tr><td>Deck e arremates, com a linha de vida</td><td>4 dias</td><td class="mono">4 dias (09 a 12/11)</td></tr>
+          <tr><td>Forma da viga de borda</td><td>2 dias</td><td class="mono">2 dias (09 e 10/11)</td></tr>
+          <tr><td>Passagens e infraestruturas</td><td>prazo não audível</td><td class="mono">6 dias (12 a 19/11)</td></tr>
+          <tr><td>Armação e cabos da laje</td><td>5 no cronograma, 4 pensados e 6 na última laje</td><td class="mono">5 dias (13 a 19/11)</td></tr>
+          <tr><td>Concretagem</td><td>prazo não audível</td><td class="mono">1 dia (23/11)</td></tr>
+          <tr><td>Protensão</td><td>prazo não audível</td><td class="mono">1 dia (26/11)</td></tr>
+          <tr><td>Reescoramento e limpeza</td><td>não citado</td><td class="mono">1 dia (27/11)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">A armação segue com 5 dias do 6º ao 10º pavimento no médio prazo, sem refletir os 6 dias relatados na última laje.</p>
+
+    <div class="sec-head sub">
+      <h2>Dias úteis do ciclo por pavimento</h2>
+      <p>Da forma dos pilares até a concretagem, como está no médio prazo. As linhas tracejadas marcam as metas de 12 e de 15 dias úteis. O arquivo não informa o pé-direito de cada pavimento.</p>
+    </div>
+    <div class="card">
+      <div class="floors-top"></div>
+      <div class="floors" id="floors"></div>
+      <div class="sim-leg" style="color:var(--ink-2);margin-top:20px">
+        <span><i style="background:var(--indigo)"></i>Forma de pilares</span>
+        <span><i style="background:var(--teal)"></i>Deck e arremates</span>
+        <span><i style="background:var(--c-armacao)"></i>Armação e cabos</span>
+        <span><i style="background:var(--yellow);box-shadow:inset 0 0 0 1px var(--navy-800)"></i>Concretagem</span>
+        <span><i style="background:repeating-linear-gradient(45deg,#C8372D,#C8372D 3px,#E2706A 3px,#E2706A 6px)"></i>Espera programada</span>
+      </div>
+    </div>
+    <p class="insight"><span class="tag leitura">Leitura EngePro</span><br><br>Dos 19 dias úteis do 8º pavimento, <b>15 seguem o padrão do pé-direito alto</b>, 1 vem dos pilares (4 dias, em vez de 3) e <b>3 vêm de uma espera de 3 dias úteis antes do deck</b>, um vínculo do tipo FS+3d que os outros pavimentos não têm. Pode ser folga intencional por causa das férias coletivas (19/12 a 3/01), mas isso precisa ser confirmado com a obra.</p>
+
+    <div class="sec-head sub">
+      <h2>Outros dados citados</h2>
+    </div>
+    <div class="card">
+      <dl class="dl">
+        <div><dt>Concreto de projeto</dt><dd>40 MPa aos 28 dias</dd></div>
+        <div><dt>Mínimo para protender</dt><dd>21 MPa, por volta do 3º dia</dd></div>
+        <div><dt>Corpos de prova</dt><dd>5 por caminhão, cilindros de 10 × 20 cm</dd></div>
+        <div><dt>Idades de ruptura citadas</dt><dd>3, 7, 28 e 63 dias</dd></div>
+        <div><dt>Reescoramento</dt><dd>100%, 50% e 25% em três níveis</dd></div>
+        <div><dt>Pé-direito</dt><dd>2,70 m (baixo) e cerca de 4 m (alto)</dd></div>
+        <div><dt>Módulo do deck</dt><dd>1,20 × 1,80 m</dd></div>
+        <div><dt>Laje a montar</dt><dd>cerca de 750 m², uns 350 a 370 painéis</dd></div>
+        <div><dt>Madeirite</dt><dd>chapa de 1,10 × 2,20 m; 12 mm na laje e 17 mm no pilar, a confirmar</dd></div>
+        <div><dt>Vida útil das formas</dt><dd>fenólico: cerca de 5 pavimentos; plastificado: cerca de 8</dd></div>
+        <div><dt>Planejamento</dt><dd>linha de base, recorte de 3 meses todo mês e plano semanal na sexta</dd></div>
+        <div><dt>Médio prazo recebido</dt><dd>02/11/2026 a 12/04/2027</dd></div>
+      </dl>
+    </div>
+  </section>
+
+<section class="sec" id="proximos">
+    <div class="sec-head">
+      <p class="eyebrow">Lacunas e próximos passos</p>
+      <h2>O que falta fechar</h2>
+      <p>A transcrição da visita é automática e o áudio vem de um canteiro. O que está nesta lista precisa de confirmação antes de entrar no mapa em BPMN.</p>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <h3>Ajustado nesta versão, a partir da reunião de 13/11</h3>
+      <ul class="bullets">
+        <li><b>Pilares.</b> As gaiolas sobem montadas pela grua. Só cinco pilares do fundo da laje, fora do alcance da grua, têm a armadura montada no local.</li>
+        <li><b>Vigas e punção.</b> As armaduras são pré-montadas no chão e sobem já montadas, só são posicionadas. Os blocos junto aos pilares são a própria punção.</li>
+        <li><b>Ordem na laje.</b> Os reforços positivos entram em paralelo com as caixas e espumas. As mangueiras elétricas vêm depois dos cabos de protensão e antes dos ferros negativos.</li>
+        <li><b>Aço.</b> Chega cortado e dobrado, mas não montado. A EngePro ainda não observou a chegada.</li>
+        <li><b>Confirmado.</b> Concretagem do 5º pavimento em 04/11, por volta das 22h; meta de 12 ou 15 dias trabalhados, e não corridos; concretagem do 6º pavimento mantida para 23/11.</li>
+      </ul>
+    </div>
+    <div class="split" style="margin-top:0">
+      <div class="card">
+        <h3>Para confirmar com a obra</h3>
+        <ul class="todo">
+          <li><span>Quais pavimentos têm pé-direito alto. O áudio cita o 2º e "6, 7, 8, 9", mas também diz que o 6º é baixo.</span></li>
+          <li><span>As datas reais do 6º pavimento: pilares em 06/11 e malha da laje em 16/11 (relato de 13/11). A concretagem do 5º em 04/11 já foi confirmada pelo engenheiro.</span></li>
+          <li><span>Quem é a nova empreiteira de estrutura (a Ajax executa o 5º e o 6º no plano) e qual o tamanho de cada frente.</span></li>
+          <li><span>Por que o 8º pavimento tem 19 dias úteis no médio prazo, e se a espera de 3 dias antes do deck é intencional.</span></li>
+          <li><span>Área da laje (750 m² ou cerca de 2 mil m²) e duração real por pavimento, em dias úteis.</span></li>
+          <li><span>Qual ferramenta guarda o médio e o curto prazo. O S64 traz o aviso "Tempo não incluído", o que sugere um campo de clima sem uso.</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Próximos passos da EngePro</h3>
+        <ul class="todo">
+          <li><span>Visitar a obra na terça, 17/11, por volta das 16h, para ver a chegada do aço (o dos pilares da próxima laje) e a logística, além da armação da laje, que entra em 16/11.</span></li>
+          <li><span>Pedir o plano semanal S65 e conferir se a lista de contatos prometida em 30/10 chegou.</span></li>
+          <li><span>Decidir se haverá visita extra: uma visita por semana perde muitos dados, porque várias atividades correm juntas.</span></li>
+          <li><span>Montar o fluxo em BPMN a partir das 8 etapas, já com as correções de 13/11, e entregar o modelo final do mapeamento na semana que vem ou na seguinte.</span></li>
+          <li><span>Receber da ATR, até terça (17/11), os comentários sobre este mapa, com destaque para onde a segurança trava a produção. Pode ser por áudio.</span></li>
+          <li><span>Registrar a data real de cada concretagem a partir do 5º pavimento e comparar com o médio prazo e com o "um mês" relatado.</span></li>
+          <li><span>Entrevistar o restante da equipe da obra. Já foram ouvidos o mestre de obras, o assistente de engenharia e a técnica de segurança; a ATR vai confirmar se o coordenador e o assistente de segurança estarão na terça. Se não estiverem, a conversa é online.</span></li>
+          <li><span>Combinar água e lanche antes das próximas visitas: uma pessoa da equipe passou mal de calor no alto da obra.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+<section class="sec" id="glossario">
+    <div class="sec-head">
+      <p class="eyebrow">Glossário</p>
+      <h2>Os termos da obra</h2>
+      <p>Palavras que aparecem nas etapas, em linguagem simples.</p>
+    </div>
+    <div class="gl-bar"><input type="search" id="gl-q" placeholder="Buscar um termo, por exemplo: deck" aria-label="Buscar no glossário"></div>
+    <dl class="gl" id="gl"></dl>
+  </section>
+
+<section class="sec" id="fontes">
+  <div class="sec-head">
+    <p class="eyebrow">Referências</p>
+    <h2>Fontes</h2>
+  </div>
+  <div class="card foot">
+    <div>
+      <h4>Fontes</h4>
+      <ul>
+        <li>Gravação da visita à obra (03/11/2026, 2h29), transcrita automaticamente e lida por inteiro.</li>
+        <li>Relatório da reunião de alinhamento ATR × EngePro, de 30/10, para nomes, escopo e metas.</li>
+        <li>Plano semanal de curto prazo S64 (02 a 07/11/2026), para datas e empreiteiras do 5º e do 6º pavimento.</li>
+        <li>Médio prazo ATM (arquivo MS Project e MP_Atmos.pdf), anexado em 06/11, para prazos e datas do ciclo.</li>
+        <li>Reunião ATR × EngePro de 13/11/2026 (41 min), gravada, para as correções do mapa e o andamento do 6º pavimento.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Para ir além</h4>
+      <ul>
+        <li><a href="https://claude.ai/artifact/PrVJxgYJPisQ79pHsdQtRv">Relatório completo da 1ª visita</a></li>
+        <li><a href="https://claude.ai/artifact/PckivebVYgPWK8yt6KUeVD">Guia de capacitação da equipe: vídeos e sites</a></li>
+      </ul>
+      <p class="note" style="margin-top:22px">EngePro Consultoria · Projeto ATR · 13/11/2026</p>
+    </div>
+  </div>
+</section>
+    </div>
+  </div>
+</main>
+</div>
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+
+//<engine>
+var HOL=['2026-11-20'];
+var FERIAS=['2026-12-19','2027-01-03'];
+var WD=['dom','seg','ter','qua','qui','sex','sáb'];
+var pad=function(n){return (n<10?'0':'')+n};
+var iso=function(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+var parseISO=function(s){var a=s.split('-').map(Number);return new Date(a[0],a[1]-1,a[2],12)};
+var addDays=function(d,n){var x=new Date(d.getTime());x.setDate(x.getDate()+n);return x};
+var diffDays=function(a,b){return Math.round((b.getTime()-a.getTime())/864e5)};
+var dm=function(d){return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
+var dmy=function(d){return dm(d)+'/'+d.getFullYear()};
+var isHol=function(d){return HOL.indexOf(iso(d))>=0};
+var isFerias=function(d){var k=iso(d);return k>=FERIAS[0]&&k<=FERIAS[1]};
+function isWork(d,sab){var w=d.getDay();if(w===0)return false;if(w===6&&!sab)return false;return !isHol(d)&&!isFerias(d)}
+function nextWork(d,sab,n){var x=new Date(d.getTime()),c=0;while(c<n){x=addDays(x,1);if(isWork(x,sab))c++}return x}
+function simulate(p){
+  var phases=[['pilares',p.fp],['deck',p.dk],['armacao',p.ar],['parada',p.pa],['concretagem',1]].filter(function(x){return x[1]>0});
+  var cells=[],d=parseISO(p.ini),wi=0,pi=0,left=phases[0][1],guard=0;
+  while(guard++<600){
+    if(isWork(d,p.sab)){
+      wi++;cells.push({date:new Date(d.getTime()),kind:phases[pi][0],n:wi});left--;
+      if(left===0){pi++;if(pi===phases.length)break;left=phases[pi][1]}
+    }else{
+      cells.push({date:new Date(d.getTime()),kind:(isHol(d)||isFerias(d))?'hol':'off',n:0});
+    }
+    d=addDays(d,1);
+  }
+  var conc=cells[cells.length-1].date;
+  return {cells:cells,wi:wi,conc:conc,prot:nextWork(conc,p.sab,3),rees:nextWork(conc,p.sab,4),next:nextWork(conc,p.sab,1)};
+}
+//</engine>
+
+/* ---------- dados ---------- */
+var TAGS={plano:'Plano',relato:'Relato',leitura:'Leitura EngePro',conf:'A confirmar'};
+var tagHTML=function(list){return list.map(function(t){return '<span class="tag '+t+'">'+TAGS[t]+'</span>'}).join(' ')};
+
+var STAGES=[
+{n:0,nome:'Concretagem da laje anterior',curto:'Concretagem',
+ quem:'Ajax lança o concreto; o mestre geral confere antes.',quando:'5º pavimento: 04/11',
+ resumo:'Marco que abre o ciclo. Antes de lançar o concreto, o mestre geral confere o aço, os reforços e tudo o que fica embutido, e qualquer pendência se corrige antes.',
+ fazem:['O mestre geral confere quantidade, bitola e posição do aço, os reforços e os embutidos.','Os carpinteiros lançam o concreto e um armador fica para ajustar o aço. O concreto é adensado com vibrador.','De cada caminhão saem cinco corpos de prova cilíndricos (10 × 20 cm), enviados ao laboratório.','Quem autoriza continuar a concretagem com chuva, frio ou umidade é o engenheiro da obra, que consulta o laboratório dos corpos de prova quando a situação é fora do comum.'],
+ equipes:['Ajax: carpintaria e armação','Mestre geral de obras','Evehx, Elioto e JPM acompanham','CDTEC: corpos de prova'],
+ plano:'A laje do 5º pavimento estava marcada para 04/11 no plano semanal S64, com Evehx, Elioto e JPM acompanhando. O engenheiro confirmou em 13/11 que a concretagem foi na quarta, 04/11, e terminou por volta das 22h.',
+ att:{tags:['relato'],txt:'Em 04/11 a concretagem terminou por volta das 22h, num dia de chuva. Por causa do clima, da temperatura e do horário, na quinta o concreto ainda não estava firme para pisar, e os pilares só começaram na sexta, 06/11. As lajes anteriores também acabaram por volta das 22h e, salvo um trecho de uma delas, sem esse problema. Já a vibração falha deixa bicheira, com brita e aço aparentes, vista só ao desformar; o engenheiro disse que é rara, de reparo padrão e sem efeito no prazo.'},
+ termos:['Corpo de prova','Bicheira','Pé-direito'],
+ modelo:'Laje N recém-concretada (amarelo), com 100% de escoras logo abaixo. Os níveis N−1 e N−2 seguem com 50% e 25%.'},
+{n:1,nome:'Pilares',curto:'Pilares',
+ quem:'Ajax faz forma e armação; Seltasul loca os eixos.',quando:'6º pavimento: 05 a 09/11',
+ resumo:'A partir do dia seguinte à concretagem, sobem os pilares do próximo pavimento: locação, forma e armação.',
+ fazem:['O topógrafo loca os eixos, mas não em toda laje; às vezes fica só o eixo marcado e o prumo é repassado de baixo.','Os carpinteiros pregam um colarinho no pé de cada pilar, referência de onde a forma começa. A forma é montada em U, sem fechar a frente.','As gaiolas de armadura dos pilares são montadas embaixo e sobem prontas, levadas pela grua, já com espaçadores plásticos. Só então a forma é fechada e travada com barrotes, agulhas, borboletas e aprumadores.','Exceção: cinco pilares do fundo da laje, fora do alcance da grua. O aço deles sobe sem montar e a armadura é montada no local onde o pilar será concretado, porque carregar a gaiola pronta na mão é pesado demais. Se esse serviço atrasar, o resto atrasa junto.','O aço dos pilares chega à obra cortado e dobrado, mas não montado.','A forma é reaproveitada de laje em laje, enquanto a seção e o pé-direito não mudarem. O fenólico (rosa) rende cerca de 5 pavimentos e o plastificado (preto), cerca de 8. A obra escolheu o fenólico por ser mais barato.','As formas das vigas são desformadas logo depois da concretagem (no S64, 05/11), condição para protender.'],
+ equipes:['Ajax: carpintaria e armação','Seltasul: topografia'],
+ plano:'6º pavimento: forma de pilares em 05 e 06/11 (2 dias) e armação de pilares de 05 a 09/11 (3 dias). A Seltasul aloca os eixos em 05/11.',
+ att:{tags:['plano','relato'],txt:'O plano semanal marcava a montagem das formas de pilares em 06 e 07/11, um dia depois do médio prazo, e foi assim que aconteceu: o engenheiro confirmou que os pilares começaram na sexta, 06/11, porque o concreto de 04/11 não estava firme na quinta. Pelo plano, ainda cabia antes do deck, em 09/11, porque o semanal usa o sábado.'},
+ termos:['Colarinho (gastalho)','Agulha e borboleta','Aprumador','Madeirite','Espaçador'],
+ modelo:'Formas dos pilares (amarelo) subindo sobre a laje N, com a armadura por dentro. Embaixo, o escoramento segue o mesmo.'},
+{n:2,nome:'Protensão',curto:'Protensão',
+ quem:'Evehx tensiona; o CDTEC libera pelo laudo.',quando:'6º pavimento: 26/11',
+ resumo:'Por volta do 3º dia, com o concreto resistente o bastante, os cabos da laje são tensionados. Sem a protensão, a laje não pode ser reescorada nem receber a etapa seguinte.',
+ fazem:['O laboratório rompe corpos de prova aos 3 dias. A laje só é protendida se o concreto chegar a 21 MPa; o concreto de projeto é de 40 MPa aos 28 dias.','Se um corpo de prova não atinge, a obra costuma revisar e liberar. Se vários falham, o projetista decide e pode pedir novo rompimento aos 5 dias, usando a curva de ganho de resistência.','Uma equipe especializada tensiona os cabos com macaco hidráulico e marca a laje. Cada cabo tem uma ponta fixa (ancoragem passiva) e outra tensionada (ativa). Como a escada e o elevador dividem a laje, há pontas em mais de um lado.'],
+ equipes:['Evehx: protensão','CDTEC: laboratório e laudo','Projetista: decide em caso de dúvida'],
+ plano:'No médio prazo, a protensão da laje do 6º pavimento está em 26/11, três dias úteis depois da concretagem de 23/11. Para a laje do 5º, o plano semanal marca o rompimento dos corpos de prova em 07/11, sábado.',
+ att:{tags:['conf'],txt:'Não se sabe quantas vezes um laudo ficou abaixo de 21 MPa nem quanto tempo passa entre o rompimento e a liberação. A pergunta já está no roteiro de entrevistas.'},
+ termos:['Protensão','MPa','Corpo de prova','Ancoragem ativa e passiva','Cordoalha'],
+ modelo:'Cabos da laje N sendo tensionados (setas amarelas nas bordas), com concreto a partir de 21 MPa. O escoramento ainda não mudou.'},
+{n:3,nome:'Reescoramento',curto:'Reescoramento',
+ quem:'Ajax; as escoras retiradas sobem de nível.',quando:'6º pavimento: 27/11',
+ resumo:'Depois de protendida, a laje descarrega parte do peso para si mesma, e as escoras de baixo podem ser aliviadas. São sempre três níveis escorados.',
+ fazem:['A laje recém-concretada fica 100% escorada. Depois de protendida, o pavimento logo abaixo fica com 50% das escoras e o seguinte com 25%.','As escoras retiradas sobem para o pavimento seguinte, onde viram o suporte do deck. O engenheiro disse que as regras podem variar conforme o projeto e a idade do concreto.'],
+ equipes:['Ajax'],
+ plano:'A laje do 6º pavimento tem reescoramento e limpeza em 27/11 (1 dia), logo depois da protensão (26/11).',
+ att:{tags:['relato'],txt:'As mesmas escoras servem a vários pavimentos. No 5º, escoras pedidas na segunda chegaram na quarta, em parte porque a obra devolveu material que deveria ter ficado.'},
+ termos:['Reescoramento','Escora','Desforma'],
+ modelo:'Escoramento caindo para 50%, 25% e 0% nos três níveis abaixo da laje N, e as escoras retiradas subindo para a laje N+1.'},
+{n:4,nome:'Assoalho (deck), vigas e linha de vida',curto:'Deck',
+ quem:'Ajax monta; a equipe própria cuida da segurança.',quando:'6º pavimento: 09 a 12/11',
+ resumo:'O assoalho é a base para todas as outras equipes trabalharem. É a etapa que a obra aponta como gargalo.',
+ fazem:['O projeto de paginação define a posição de cada painel. Monta-se primeiro um conjunto de quatro escoras com um painel, para travar, e depois se segue painel a painel.','Cada painel (1,20 × 1,80 m) é segurado por duas pessoas e erguido por uma terceira, pelo encaixe em garfo. Depois entram as escoras de canto. São 3 a 4 pessoas por conjunto.','Painéis e escoras vêm do pavimento de baixo: é preciso desmontar, transportar e remontar. O engenheiro chamou de trabalho de formiguinha.','Com pé-direito alto, uma dupla trabalha sobre andaime com proteção e outra posiciona as escoras de 4 m. Por isso o ciclo leva mais tempo.','O fundo das vigas é montado enquanto o deck sobe, com escoras (pé-direito baixo) ou torres (alto).','Em paralelo, sobem os tubos da linha de vida e o cabo de aço, com tensores. Só depois disso se libera subir na laje.'],
+ equipes:['Ajax: carpintaria','ATR-OBRA: linha de vida e guarda-corpo','Metroform: ajuste das telas'],
+ plano:'6º pavimento: deck e arremates em 09 a 12/11 (4 dias) e forma da viga de borda em 09 e 10/11 (2 dias). Do 7º ao 10º pavimento, os dois passam a 6 dias.',
+ att:{tags:['relato'],txt:'Cerca de 750 m² de laje, uns 350 a 370 painéis montados um a um, com a maior equipe da obra. Armadores montam vários pilares por dia; o deck não. No médio prazo ele não é a tarefa mais longa da laje, mas a armação só começa depois dele.'},
+ termos:['Deck','Escora','Torre','Linha de vida','Pé-direito'],
+ modelo:'Deck modular (amarelo) montado sobre as escoras que subiram, com a forma da viga de borda nas pontas e a linha de vida acima.'},
+{n:5,nome:'Arremates e marcação das paredes',curto:'Arremates',
+ quem:'Ajax fecha; JPM e Elioto marcam.',quando:'6º pavimento: dentro do deck, 09 a 12/11',
+ resumo:'Onde o painel não encaixa, entram os arremates. Sobre o deck pronto, as equipes de instalações marcam onde ficam as paredes.',
+ fazem:['Perto de pilares e vigas usa-se um perfil de arremate com ripa de madeira, onde se prega o madeirite. Depois vêm os fechamentos laterais das vigas.','Rebaixos, como o da sacada (5 cm mais baixa), são feitos com uma madeira atravessada na laje.','Os eletricistas marcam as paredes dos apartamentos com linha de náilon e spray amarelo. O encanador marca só os pontos dele.','Os carpinteiros colocam fita nas emendas do deck, por recomendação do fornecedor, para não escorrer concreto, e aplicam o desmoldante, um óleo.'],
+ equipes:['Ajax: arremates e fitas','JPM: marcação da elétrica','Elioto: marcação da hidráulica'],
+ plano:'No médio prazo, os arremates fazem parte da atividade deck e arremates do 6º pavimento (09 a 12/11). As passagens e infras começam no último dia do deck (12/11).',
+ att:{tags:['relato','leitura'],txt:'Em 13/11 o engenheiro apontou os arremates e a forma das vigas como o que está travando o 6º pavimento: sem eles, as vigas já armadas não podem ser posicionadas. Esta etapa não tem linha própria no cronograma, então o tempo dela fica escondido dentro do deck. Medir arremates e forma das vigas à parte ajudaria a ver onde o ciclo realmente trava.'},
+ termos:['Arremate','Desmoldante','Deck'],
+ modelo:'Fechamentos nas bordas da laje N+1 e marcação das paredes (traços amarelos) sobre o deck.'},
+{n:6,nome:'Armação, cabos e infraestrutura embutida',curto:'Armação',
+ quem:'Ajax arma; JPM e Elioto instalam.',quando:'6º pavimento: 12 a 19/11',
+ resumo:'Etapa mais cheia do ciclo: armação, cabos de protensão e elétrica e hidráulica embutidas disputam a mesma laje, e a ordem importa.',
+ fazem:['Enquanto o deck é montado, os armadores pré-montam no chão as armaduras das vigas e da punção (os blocos junto aos pilares). Elas sobem já montadas e só são posicionadas.','Na laje, a ordem é: vigas; tela soldada positiva (sobreposta e amarrada, por isso as vigas vêm antes); reforços positivos, em paralelo com as caixas e espumas da elétrica e da hidráulica, que cortam a tela; cabos de protensão nas alturas marcadas; mangueiras elétricas; ferros negativos sobre as vigas.','A mangueira elétrica não pode passar antes dos cabos de protensão, senão atrapalha, mas entra antes dos ferros negativos. As espumas deixam vazios para esgoto, gordura, pluvial e água, e são retiradas depois para passar os tubos.','O madeirite alugado não pode ser furado, então a elétrica usa caixas octogonais como caixa de passagem, cheias de serragem úmida compactada e com tampa, para o concreto não entrar.','Aço e cabos chegam cortados e dobrados por posição, mas não montados, pedidos por pavimento, com uma laje de antecedência. A EngePro ainda não viu essa chegada: a visita de terça, 17/11, por volta das 16h, é para acompanhar a entrega do aço dos pilares da próxima laje.'],
+ equipes:['Ajax: armação','Evehx: cabos de protensão','JPM: elétrica','Elioto: hidráulica'],
+ plano:'6º pavimento: armação e cabos em 13 a 19/11 (5 dias) e passagens e infras em 12 a 19/11 (6 dias), em paralelo.',
+ att:{tags:['relato'],txt:'Poucos armadores: desde que sobem na laje, levam 6 dias, contra 4 pensados. O cronograma mostrado traz 5, e o médio prazo mantém 5 do 6º ao 10º pavimento. No 6º, a malha da laje devia entrar em 13/11 e só entra na segunda, 16/11, porque a forma das vigas e os arremates não ficaram prontos.'},
+ termos:['Tela soldada','Armadura positiva e negativa','Punção','Caixa octogonal','Cordoalha'],
+ modelo:'Armadura (azul-petróleo), cabo de protensão em curva (amarelo escuro) e caixas octogonais dentro da espessura da laje N+1.'},
+{n:7,nome:'Conferência e nova concretagem',curto:'Concretagem',
+ quem:'O mestre geral confere; Ajax concreta.',quando:'6º pavimento: 23/11',
+ resumo:'Fecha o ciclo e abre o próximo. A laje é concretada no 12º dia trabalhado, com pé-direito baixo, ou no 15º, com pé-direito alto.',
+ fazem:['O mestre geral confere tudo, como na etapa 0: quantidade, bitola e posição do aço, reforços e embutidos.','A concretagem reinicia o ciclo: a forma dos pilares do pavimento seguinte começa logo depois.','Na véspera da concretagem do 5º pavimento (03/11), o plano semanal lista os fechamentos finais: rebaixo de sacada, degraus da escada, negativos, ganchos de cabos, reforços de shafts, caixinhas octogonais, mangueiras, limpeza da laje e guarda-corpo de periferia.'],
+ equipes:['Mestre geral de obras','Ajax: concretagem','Evehx, Elioto e JPM acompanham','ATR-OBRA: plataforma de pedestre'],
+ plano:'6º pavimento: concretagem em 23/11, o 12º dia útil. A forma dos pilares do 7º pavimento já começa em 24/11.',
+ att:{tags:['plano','relato'],txt:'20/11 é feriado e fica fora da conta. Descontando o feriado, os 12 dias úteis de 05 a 23/11 batem com a meta. Com os pilares começando em 06/11, a conta teórica iria para 24/11; em 13/11 o engenheiro disse que mantém 23/11 (segunda), porque, segundo ele, a obra não pode dar esse luxo.'},
+ termos:['Ciclo da laje','Dia útil'],
+ modelo:'Concretagem da laje N+1 (amarelo). Quando termina, ela vira a nova laje N e o ciclo recomeça na etapa 1.'}
+];
+
+var TEAMS=[
+['Carpintaria','Ajax','Formas de pilar, deck de laje, escoramento de vigas, arremates e fechamentos. Também lança o concreto.'],
+['Armação','Ajax','Armação de pilares, vigas, punção, tela e cabos de protensão. Fica um armador acompanhando a concretagem.'],
+['Protensão','Evehx','Equipe especializada que só vem para protender e marcar a laje. No plano semanal aparece também na véspera (cordoalhas) e na concretagem.'],
+['Elétrica','JPM','Marca as paredes, instala caixas, mangueiras e espumas das passagens e acompanha a concretagem.'],
+['Hidráulica','Elioto','Marca os pontos dela, instala caixas e espumas das passagens e acompanha a concretagem. No plano semanal o nome vem como Elyoto.'],
+['Topografia','Seltasul','Loca os eixos dos pilares, mas nem em todas as lajes. No 6º pavimento a locação está marcada para 05/11.'],
+['Laboratório','CDTEC','Rompe os corpos de prova e emite o laudo que libera a protensão. Para o 5º pavimento, o rompimento está marcado para 07/11.'],
+['Mestre geral de obras','ATR','Confere a armadura e os embutidos antes de cada concretagem.'],
+['Equipe própria','ATR-OBRA','Segurança (linha de vida e guarda-corpo), serviços gerais, grua e sinaleiro. No S64 aparecem também a plataforma de pedestre e a remoção de madeira no subsolo. A Metroform ajusta as telas e faz as ascensões dos sistemas U e V.']
+];
+
+var ATT=[
+{t:'Montagem do deck',tags:['relato'],hot:true,p:'É o que mais demora e a base para todos trabalharem. Trabalho manual que pede a maior equipe: cerca de 750 m² de laje, uns 350 a 370 painéis montados um a um. No médio prazo o deck do 6º tem 4 dias, e a armação só começa depois dele e da viga de borda.'},
+{t:'Arremates e forma das vigas',tags:['relato','leitura'],hot:true,p:'Em 13/11, o engenheiro apontou como o que trava o 6º pavimento: sem a forma das vigas e os arremates prontos, as vigas já armadas não são posicionadas, e a tela, as caixas e o resto da armação esperam, uma coisa depende da outra. A malha da laje, prevista para 13/11, entra só em 16/11. Esse trabalho não tem linha própria no cronograma e fica embutido no deck.'},
+{t:'Armação da laje',tags:['relato'],hot:true,p:'Poucos armadores. Desde que sobem na laje, levam 6 dias, contra 4 pensados. O cronograma mostrado traz 5, e o médio prazo mantém 5 dias do 6º ao 10º pavimento.'},
+{t:'Empreiteira de estrutura',tags:['relato','conf'],hot:true,p:'Houve reclamações nos dois sentidos e troca de encarregado de carpintaria sem avanço. No 5º pavimento, a empreiteira montou metade do assoalho e saiu. A nova equipe fez o resto e vai fazer o primeiro ciclo completo no 6º, sem conhecer o sistema de deck. No plano, a Ajax executa formas, armação, concretagem e reescoramento do 5º e do 6º; provavelmente é a nova equipe. Em 13/11 o engenheiro explicou que a troca serve para voltar ao plano original: concretar no 12º dia trabalhado (pé-direito baixo) ou no 15º (alto), e não corrido. A empreiteira anterior levava um mês corrido por laje.'},
+{t:'Pé-direito alto',tags:['relato','plano'],p:'Pede dupla em andaime, escoras de 4 m e mais transporte. A meta sobe de 12 para 15 dias trabalhados. O médio prazo reflete isso: 12 dias úteis no 6º e 15 no 7º, no 9º e no 10º. O 8º aparece com 19.'},
+{t:'Segurança e produção',tags:['relato'],p:'A linha de vida precisa estar pronta antes de subir na laje, e a falta de proteção para a atividade. A ATR confirmou em 13/11: pela política da empresa, enquanto a linha de vida não está 100% montada ninguém sobe, e isso já parou a produção em lajes passadas. A equipe de segurança é enxuta (duas pessoas, a confirmar) para muitas frentes ao mesmo tempo. A ordem assoalho antes de vigas nasceu desse conflito.'},
+{t:'Material',tags:['relato','conf'],p:'Três episódios pontuais: telas soldadas atrasaram um dia no 3º pavimento (fornecedor já trocado); escoras pedidas na segunda chegaram na quarta no 5º; de duas bitolas de mangueira elétrica, uma não chegou e ninguém conferiu. Aço e cabos não foram citados como problema.'},
+{t:'Chuva e clima',tags:['relato'],p:'Atrapalha muito. Com pouca chuva trabalham de capa; com muita, não dá, conforme a etapa da laje. Em 04/11, com uma chuva forte de uns 15 minutos e a temperatura do dia, a concretagem terminou por volta das 22h e o concreto não estava firme na quinta para pisar; nas outras lajes, que também acabaram tarde, isso quase não ocorreu. Quem autoriza seguir ou parar é o engenheiro, que consulta o laboratório quando a situação é fora do comum.'},
+{t:'Retrabalho',tags:['relato'],p:'Considerado baixo: o mestre geral corrige a armadura antes de concretar e não houve concretagem refeita por erro. Bicheira em pilar é rara e não afeta o prazo.'},
+{t:'Controle por etapa',tags:['leitura','conf'],p:'Na visita, ao perguntar qual etapa específica atrasou, a resposta não apontou uma etapa. Hipótese da EngePro: o atraso ainda não é medido por etapa, o que só as datas reais de cada atividade vão confirmar.'}
+];
+
+var GL=[
+['Ciclo da laje','Intervalo entre a concretagem de uma laje e a da seguinte.'],
+['Laje protendida lisa','Laje sem vigas no miolo, reforçada por cabos de aço tensionados depois da concretagem.'],
+['Cordoalha','Cabo de aço engraxado, dentro de uma mangueira plástica, que é tensionado depois que o concreto endurece.'],
+['Ancoragem ativa e passiva','Pontas do cabo de protensão. A passiva é fixa; a ativa é a ponta onde o macaco hidráulico puxa o cabo.'],
+['Protensão','Tensionar os cabos com macaco hidráulico quando o concreto atinge a resistência mínima, 21 MPa na Atmos.'],
+['MPa','Unidade de resistência do concreto. O de projeto é de 40 MPa aos 28 dias.'],
+['Corpo de prova','Cilindro de concreto moldado de cada caminhão e rompido no laboratório para medir a resistência.'],
+['Bicheira','Falha de adensamento que deixa brita e aço aparentes na superfície do concreto.'],
+['Deck','Assoalho modular de painéis, aqui de 1,20 × 1,80 m, apoiado em escoras, onde a laje é concretada.'],
+['Escora','Haste metálica que sustenta o deck e a laje até o concreto ter resistência.'],
+['Torre','Estrutura de escoramento mais alta, usada em alguns pontos de pé-direito alto.'],
+['Reescoramento','Manter escoras sob lajes já concretadas: 100% na recém-concretada e, depois de protendida, 50% no nível abaixo e 25% no seguinte.'],
+['Desforma','Retirada das formas depois que o concreto endureceu.'],
+['Colarinho (gastalho)','Peça pregada no pé do pilar que serve de referência para começar a forma.'],
+['Agulha e borboleta','A agulha atravessa a forma do pilar e a borboleta a prende, travando a forma.'],
+['Aprumador','Escora inclinada que mantém a forma do pilar no prumo.'],
+['Madeirite','Chapa de compensado usada nas formas. O fenólico (rosa) rende cerca de 5 pavimentos e o plastificado (preto), cerca de 8.'],
+['Arremate','Fechamento onde o painel do deck não encaixa, feito com perfil e ripa de madeira.'],
+['Desmoldante','Óleo aplicado na forma para o concreto não grudar.'],
+['Linha de vida','Cabo de aço onde o trabalhador prende o talabarte para trabalhar em altura.'],
+['Talabarte','Cabo ou fita que liga o cinto de segurança à linha de vida.'],
+['Guarda-corpo','Proteção na borda da laje. Onde há tela de piso a piso, ele dispensa montagem.'],
+['Punção','Esforço concentrado em volta dos pilares, onde a laje lisa tende a ser perfurada. Por isso há armadura reforçada junto a eles.'],
+['Tela soldada','Malha de aço usada como armadura positiva da laje, colocada depois das vigas.'],
+['Armadura positiva e negativa','A positiva fica embaixo, no meio do vão. A negativa fica em cima, sobre os apoios.'],
+['Espaçador','Peça plástica que mantém a armadura afastada da forma, garantindo o cobrimento do concreto.'],
+['Caixa octogonal','Caixa elétrica usada como caixa de passagem, cheia de serragem úmida para o concreto não entrar.'],
+['Pé-direito','Altura livre entre o piso e o teto. Na Atmos, 2,70 m (baixo) e cerca de 4 m (alto).'],
+['Dia útil','Dia de trabalho no calendário do médio prazo: segunda a sexta, sem feriado nem férias coletivas. O plano semanal também usa o sábado.'],
+['Plano semanal','Planejamento de curto prazo da semana, feito na sexta, com atividade por equipe e por dia.'],
+['BPMN','Notação para desenhar processos em fluxo. A EngePro vai usá-la para mapear o ciclo.']
+];
+
+var GANTT=[
+{nome:'Forma de pilares',eq:'Ajax',ini:'2026-11-05',fim:'2026-11-06',du:2,cls:'ajax'},
+{nome:'Armação de pilares',eq:'Ajax',ini:'2026-11-05',fim:'2026-11-09',du:3,cls:'ajax'},
+{nome:'Deck e arremates',eq:'Ajax',ini:'2026-11-09',fim:'2026-11-12',du:4,cls:'ajax',nota:'Gargalo apontado pelo engenheiro. A armação da laje só começa depois dele e da viga de borda.'},
+{nome:'Forma da viga de borda',eq:'Ajax',ini:'2026-11-09',fim:'2026-11-10',du:2,cls:'ajax'},
+{nome:'Passagens e infras',eq:'Elioto e JPM',ini:'2026-11-12',fim:'2026-11-19',du:6,cls:'infra',nota:'Entram no último dia do deck e terminam junto com a armação.'},
+{nome:'Armação e cabos da laje',eq:'Ajax',ini:'2026-11-13',fim:'2026-11-19',du:5,cls:'ajax',nota:'Relato de 6 dias na última laje, contra 5 no plano.'},
+{nome:'Concretagem',eq:'Ajax',ini:'2026-11-23',fim:'2026-11-23',du:1,cls:'conc',nota:'12º dia útil do ciclo, depois do feriado de 20/11.'},
+{nome:'Protensão',eq:'Evehx',ini:'2026-11-26',fim:'2026-11-26',du:1,cls:'prot',nota:'Três dias úteis depois da concretagem.'},
+{nome:'Reescoramento e limpeza',eq:'Ajax',ini:'2026-11-27',fim:'2026-11-27',du:1,cls:'ajax'}
+];
+
+var FLOORS=[
+{n:'6º',seg:[['pilares',2],['deck',4],['armacao',5],['concretagem',1]],conc:'23/11',gap:'19 dias corridos desde 04/11'},
+{n:'7º',seg:[['pilares',3],['deck',6],['armacao',5],['concretagem',1]],conc:'14/12',gap:'21 dias corridos desde 23/11'},
+{n:'8º',seg:[['pilares',4],['espera',3],['deck',6],['armacao',5],['concretagem',1]],conc:'22/01/27',gap:'39 dias corridos, com as férias coletivas'},
+{n:'9º',seg:[['pilares',3],['deck',6],['armacao',5],['concretagem',1]],conc:'12/02/27',gap:'21 dias corridos desde 22/01'},
+{n:'10º',seg:[['pilares',3],['deck',6],['armacao',5],['concretagem',1]],conc:'05/03/27',gap:'21 dias corridos desde 12/02'}
+];
+var PHASE_NAME={pilares:'Forma de pilares',deck:'Deck e arremates',armacao:'Armação e cabos',parada:'Parado',concretagem:'Concretagem',espera:'Espera programada (FS+3d)'};
+
+/* ---------- modelo físico (SVG) ---------- */
+function modelSVG(n){
+  var COLX=[110,290,470,650],CW=20,X0=60,X1=720,T=16,GROUND=436;
+  var TOP={A:346,B:256,C:166,D:76};
+  var NAVY='#15214A',BLUE='#214981',YEL='#FFDE59',FOC='#E8B800',SH='#80A6DE',TEAL='#0F7F8C';
+  var s='';
+  var R=function(x,y,w,h,fill,stroke,sw,dash){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+(fill||'none')+'"'+(stroke?' stroke="'+stroke+'" stroke-width="'+(sw||2)+'"':'')+(dash?' stroke-dasharray="'+dash+'"':'')+'/>'};
+  var L=function(x1,y1,x2,y2,c,w,dash){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+c+'" stroke-width="'+(w||2)+'" stroke-linecap="round"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>'};
+  var TX=function(x,y,str,size,wt,anchor,fill){return '<text x="'+x+'" y="'+y+'" font-size="'+size+'" font-weight="'+(wt||600)+'" text-anchor="'+(anchor||'start')+'" fill="'+(fill||NAVY)+'">'+str+'</text>'};
+  var shores=function(yTop,yBot,dens,col,sw){
+    if(dens<=0)return '';
+    var out='',per=Math.round(dens*8);
+    for(var i=0;i<3;i++){
+      var a=COLX[i]+CW,b=COLX[i+1],step=(b-a)/per;
+      for(var k=0;k<per;k++){var x=a+step*(k+.5);out+=L(x,yTop,x,yBot,col,sw||2.5)}
+    }
+    return out;
+  };
+  s+='<defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#C7D2E6" stroke-width="2"/></pattern></defs>';
+  s+=R(30,GROUND,720,34,'url(#hatch)');
+  s+=L(30,GROUND,750,GROUND,NAVY,3);
+  COLX.forEach(function(x){s+=R(x,TOP.C,CW,GROUND-TOP.C,BLUE)});
+  var dens=n<3?[1,.5,.25]:[.5,.25,0],hl=(n===3)?FOC:SH;
+  s+=shores(TOP.C+T,TOP.B,dens[0],hl);
+  s+=shores(TOP.B+T,TOP.A,dens[1],hl);
+  s+=shores(TOP.A+T,GROUND,dens[2],hl);
+  s+=R(X0,TOP.A,X1-X0,T,BLUE);
+  s+=R(X0,TOP.B,X1-X0,T,BLUE);
+  s+=(n===0)?R(X0,TOP.C,X1-X0,T,YEL,NAVY,2.5):R(X0,TOP.C,X1-X0,T,BLUE);
+
+  /* pilares do pavimento N+1 */
+  if(n===1){
+    COLX.forEach(function(x){
+      s+=R(x-6,TOP.D,CW+12,TOP.C-TOP.D,'rgba(255,222,89,.55)',FOC,3);
+      s+=L(x+5,TOP.D+6,x+5,TOP.C-2,TEAL,2,'4 3')+L(x+15,TOP.D+6,x+15,TOP.C-2,TEAL,2,'4 3');
+    });
+  }else if(n>=2){
+    COLX.forEach(function(x){s+=R(x,TOP.D,CW,TOP.C-TOP.D,BLUE)});
+  }
+
+  /* nível N+1 */
+  if(n<4){
+    s+=R(X0,TOP.D,X1-X0,T,'none','#80A6DE',2,'6 5');
+  }else{
+    var focoDeck=(n===4);
+    s+=shores(TOP.D+T,TOP.C,1,focoDeck?FOC:SH);
+    s+=L(X0,TOP.D+T,X1,TOP.D+T,focoDeck?FOC:NAVY,6);
+    for(var x=X0;x<=X1;x+=36){s+=L(x,TOP.D+T,x,TOP.D+T+7,NAVY,2)}
+    var vb=focoDeck?FOC:SH;
+    s+=R(X0,TOP.D+T,70,22,'none',vb,3)+R(X1-70,TOP.D+T,70,22,'none',vb,3);
+    COLX.forEach(function(x){s+=L(x+10,TOP.D,x+10,44,NAVY,3)});
+    s+=L(COLX[0]+10,44,COLX[3]+10,44,NAVY,2);
+    COLX.forEach(function(x){s+='<circle cx="'+(x+10)+'" cy="44" r="4" fill="'+YEL+'" stroke="'+NAVY+'" stroke-width="2"/>'});
+    s+=TX(COLX[0]+18,30,'linha de vida',18,700,'start');
+  }
+  if(n===4){
+    s+=R(X0,TOP.D+T-4,X1-X0,8,YEL,NAVY,2);
+  }
+  if(n===5){
+    s+=R(X0-8,TOP.D-6,8,38,YEL,NAVY,2)+R(X1,TOP.D-6,8,38,YEL,NAVY,2);
+    for(var m=100;m<=680;m+=56){s+=R(m,TOP.D-3,24,5,YEL,NAVY,1.5)}
+    s+=TX(738,TOP.D+14,'marcação',20,800)+TX(738,TOP.D+38,'das paredes',20,800);
+  }
+  if(n===6){
+    s+=L(X0+10,TOP.D+T-3,X1-10,TOP.D+T-3,TEAL,3);
+    COLX.forEach(function(x){s+=L(x-35,TOP.D+4,x+55,TOP.D+4,TEAL,3)});
+    s+='<path d="M'+(X0+10)+',82 L120,80 Q210,97 300,80 Q390,97 480,80 Q570,97 660,80 L'+(X1-10)+',82" fill="none" stroke="'+FOC+'" stroke-width="3.5" stroke-linecap="round"/>';
+    [200,380,560].forEach(function(x){s+=R(x,TOP.D+3,12,11,TEAL,'#fff',1.5)});
+    s+=TX(738,TOP.D+14,'armação, cabos',20,800)+TX(738,TOP.D+38,'e caixas',20,800);
+  }
+  if(n===7){
+    s+=R(X0,TOP.D,X1-X0,T,YEL,NAVY,2.5);
+  }
+
+  /* protensão: setas nas bordas da laje N */
+  if(n===2){
+    var my=TOP.C+T/2;
+    s+='<polygon points="'+(X0-38)+','+my+' '+(X0-20)+','+(my-11)+' '+(X0-20)+','+(my-4)+' '+X0+','+(my-4)+' '+X0+','+(my+4)+' '+(X0-20)+','+(my+4)+' '+(X0-20)+','+(my+11)+'" fill="'+YEL+'" stroke="'+NAVY+'" stroke-width="2"/>';
+    s+='<polygon points="'+(X1+38)+','+my+' '+(X1+20)+','+(my-11)+' '+(X1+20)+','+(my-4)+' '+X1+','+(my-4)+' '+X1+','+(my+4)+' '+(X1+20)+','+(my+4)+' '+(X1+20)+','+(my+11)+'" fill="'+YEL+'" stroke="'+NAVY+'" stroke-width="2"/>';
+    s+=TX(X1+46,my+7,'≥ 21 MPa',20,800,'start');
+  }
+
+  /* reescoramento: escoras sobem */
+  if(n===3){
+    s+=L(930,420,930,130,FOC,5,'9 7');
+    s+='<polygon points="930,112 918,136 942,136" fill="'+FOC+'"/>';
+    s+=TX(930,70,'escoras',17,700,'middle')+TX(930,92,'sobem',17,700,'middle');
+  }
+
+  /* rótulos de nível e de escoramento */
+  s+=TX(2,TOP.D-6,'N+1',22,800)+TX(2,TOP.C-6,'N',22,800)+TX(2,TOP.B-6,'N−1',22,800)+TX(2,TOP.A-6,'N−2',22,800);
+  var lab=n<3?['100%','50%','25%']:(n===3?['100% → 50%','50% → 25%','25% → 0%']:['50%','25%','0%']);
+  s+=TX(738,222,lab[0],22,800)+TX(738,312,lab[1],22,800)+TX(738,402,lab[2],22,800);
+  s+=TX(738,244,'de escoras',16,600,'start','#3E4A6B')+TX(738,334,'de escoras',16,600,'start','#3E4A6B')+TX(738,424,'de escoras',16,600,'start','#3E4A6B');
+  if(n<4)s+=TX(738,TOP.D+14,'a construir',17,600,'start','#3E4A6B');
+  if(n===4)s+=TX(738,TOP.D+14,'deck',20,800);
+  if(n===7)s+=TX(738,TOP.D+14,'concretagem',20,800);
+  return '<svg viewBox="0 0 960 480" role="img" aria-label="'+esc(STAGES[n].modelo)+'" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, Arial, sans-serif">'+s+'</svg>';
+}
+
+/* ---------- guia de etapas ---------- */
+var cur=0;
+function renderCycle(){
+  $('#cycle').innerHTML=STAGES.map(function(s){
+    return '<li><button type="button" class="cstep" data-n="'+s.n+'"><span class="cnum">'+s.n+'</span><h3>'+esc(s.nome)+'</h3><p class="who">'+esc(s.quem)+'</p><span class="when">'+esc(s.quando)+'</span></button></li>';
+  }).join('');
+}
+function renderTabs(){
+  $('#tabs').innerHTML=STAGES.map(function(s){
+    return '<button type="button" class="tab" role="tab" id="tab-'+s.n+'" data-n="'+s.n+'" aria-selected="false" aria-controls="detail"><i>'+s.n+'</i>'+esc(s.curto)+'</button>';
+  }).join('');
+}
+function renderDetail(n){
+  var s=STAGES[n];
+  var h='<h3><span class="cnum">'+s.n+'</span><span>'+esc(s.nome)+'</span></h3><p class="sum">'+esc(s.resumo)+'</p>';
+  h+='<h4>O que acontece</h4><ul class="steps">'+s.fazem.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ul>';
+  h+='<h4>Quem faz</h4><div class="chips">'+s.equipes.map(function(t){return '<span class="chip">'+esc(t)+'</span>'}).join('')+'</div>';
+  h+='<div class="plan-box"><b>No plano</b><p>'+esc(s.plano)+'</p></div>';
+  h+='<div class="att-box"><div>'+tagHTML(s.att.tags)+'</div><p>'+esc(s.att.txt)+'</p></div>';
+  h+='<h4>Termos desta etapa</h4><div class="chips">'+s.termos.map(function(t){return '<button type="button" class="chip" data-term="'+esc(t)+'">'+esc(t)+'</button>'}).join('')+'</div>';
+  h+='<div class="stage-nav"><button type="button" data-go="'+(n-1)+'"'+(n===0?' disabled':'')+'>Etapa anterior</button><button type="button" data-go="'+(n+1)+'"'+(n===STAGES.length-1?' disabled':'')+'>Próxima etapa</button></div>';
+  $('#detail').innerHTML=h;
+}
+function select(n,scroll){
+  cur=n;
+  $$('.tab').forEach(function(b){var on=+b.dataset.n===n;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1});
+  $$('.cstep').forEach(function(b){b.classList.toggle('is-on',+b.dataset.n===n)});
+  renderDetail(n);
+  $('#model').innerHTML=modelSVG(n);
+  $('#model-cap').textContent='No desenho: '+STAGES[n].modelo;
+  var t=$('#tab-'+n);if(t&&t.scrollIntoView&&scroll)t.scrollIntoView({block:'nearest',inline:'center'});
+  if(scroll==='jump')$('#etapas').scrollIntoView();
+}
+function wireGuide(){
+  $('#cycle').addEventListener('click',function(e){var b=e.target.closest('.cstep');if(b)select(+b.dataset.n,'jump')});
+  $('#tabs').addEventListener('click',function(e){var b=e.target.closest('.tab');if(b)select(+b.dataset.n,true)});
+  $('#tabs').addEventListener('keydown',function(e){
+    var k=e.key;if(k!=='ArrowRight'&&k!=='ArrowLeft')return;
+    e.preventDefault();var n=(cur+(k==='ArrowRight'?1:-1)+STAGES.length)%STAGES.length;select(n,true);$('#tab-'+n).focus();
+  });
+  $('#detail').addEventListener('click',function(e){
+    var g=e.target.closest('[data-go]');if(g&&!g.disabled){select(+g.dataset.go,true);return}
+    var c=e.target.closest('[data-term]');if(c){var q=$('#gl-q');q.value=c.dataset.term;filterGl();$('#glossario').scrollIntoView()}
+  });
+}
+
+/* ---------- cronograma (Gantt) ---------- */
+function buildGantt(){
+  var start=parseISO('2026-11-05'),end=parseISO('2026-11-27'),N=diffDays(start,end)+1;
+  var days=[];for(var i=0;i<N;i++)days.push(addDays(start,i));
+  var today=iso(new Date());
+  var cls=function(d){var c=[];var w=d.getDay();if(w===0||w===6)c.push('we');if(isHol(d))c.push('hol');if(iso(d)===today)c.push('hoje');return c.join(' ')};
+  var h='<div class="g-row g-head" style="--cols:'+N+'"><div class="g-label"></div>'+days.map(function(d,i){
+    return '<div class="g-cell '+cls(d)+'" style="grid-column:'+(i+2)+'"><b>'+pad(d.getDate())+'</b>'+WD[d.getDay()]+'</div>';
+  }).join('')+'</div>';
+  var wn=0;
+  h+='<div class="g-row" style="--cols:'+N+'"><div class="g-label">Dia útil do ciclo<small>meta: concretar no 12º</small></div>'+days.map(function(d,i){
+    var show='';if(isWork(d,false)&&iso(d)<='2026-11-23'){wn++;show='<span class="g-day'+(wn===12?' meta':'')+'">'+wn+'</span>'}
+    return '<div class="g-cell '+cls(d)+'" style="grid-column:'+(i+2)+'">'+show+'</div>';
+  }).join('')+'</div>';
+  GANTT.forEach(function(t,k){
+    var a=diffDays(start,parseISO(t.ini)),b=diffDays(start,parseISO(t.fim));
+    var when=dm(parseISO(t.ini))+(t.ini!==t.fim?' a '+dm(parseISO(t.fim)):'');
+    h+='<div class="g-row" style="--cols:'+N+'"><div class="g-label">'+esc(t.nome)+'<small>'+esc(t.eq)+' · '+when+'</small></div>'+days.map(function(d,i){return '<div class="g-cell '+cls(d)+'" style="grid-column:'+(i+2)+'"></div>'}).join('')
+      +'<button type="button" class="g-bar '+t.cls+'" data-k="'+k+'" style="grid-column:'+(a+2)+' / '+(b+3)+'" aria-label="'+esc(t.nome+', '+t.eq+', '+when+', '+t.du+(t.du>1?' dias úteis':' dia útil'))+'">'+t.du+' d</button></div>';
+  });
+  $('#gantt').innerHTML=h;
+  var sel=null;
+  var show=function(btn){
+    var t=GANTT[+btn.dataset.k];
+    if(sel)sel.classList.remove('sel');sel=btn;btn.classList.add('sel');
+    var when=dm(parseISO(t.ini))+(t.ini!==t.fim?' a '+dm(parseISO(t.fim)):'');
+    $('#g-cap').textContent=t.nome+' · '+t.eq+' · '+when+' · '+t.du+(t.du>1?' dias úteis':' dia útil')+(t.nota?'. '+t.nota:'');
+  };
+  $('#gantt').addEventListener('click',function(e){var b=e.target.closest('.g-bar');if(b)show(b)});
+  $('#gantt').addEventListener('mouseover',function(e){var b=e.target.closest('.g-bar');if(b)show(b)});
+  $('#gantt').addEventListener('focusin',function(e){var b=e.target.closest('.g-bar');if(b)show(b)});
+}
+
+/* ---------- simulador ---------- */
+var PRESETS=[
+ {nome:'Plano do 6º (pé-direito baixo)',fp:2,dk:4,ar:5,pa:0,meta:12},
+ {nome:'Plano com pé-direito alto',fp:3,dk:6,ar:5,pa:0,meta:15},
+ {nome:'Armação em 6 dias (relato)',fp:2,dk:4,ar:6,pa:0,meta:12},
+ {nome:'Plano com 3 dias de chuva',fp:2,dk:4,ar:5,pa:3,meta:12}
+];
+var clamp=function(v,a,b){v=Math.round(Number(v));if(isNaN(v))v=a;return Math.min(b,Math.max(a,v))};
+function readInputs(){
+  return {ini:$('#in-ini').value||'2026-11-05',fp:clamp($('#in-fp').value,1,15),dk:clamp($('#in-dk').value,1,20),ar:clamp($('#in-ar').value,1,20),pa:clamp($('#in-pa').value,0,20),sab:$('#in-sab').checked,meta:+$('#in-meta').value};
+}
+function runSim(){
+  var p=readInputs(),r=simulate(p);
+  var diff=r.wi-p.meta,prev=parseISO('2026-11-04'),corr=diffDays(prev,r.conc);
+  var tile=function(k,small,big,sub,cls){return '<div class="res '+(cls||'')+'"><small>'+small+'</small><b>'+big+'</b><span>'+sub+'</span></div>'};
+  var h='<div class="res-main">'
+   +tile('c','Concretagem em',dm(r.conc),WD[r.conc.getDay()]+', '+r.wi+'º dia útil')
+   +tile('d','Frente à meta',(diff>0?'+':'')+diff+(Math.abs(diff)===1?' dia':' dias'),'meta de '+p.meta+' dias úteis',diff>0?'bad':'ok')
+   +tile('k','Entre concretagens',corr+' dias','corridos desde 04/11, no 5º pavimento')
+   +'</div><div class="res-main" style="margin-top:12px">'
+   +tile('p','Protensão em',dm(r.prot),WD[r.prot.getDay()]+', 3 dias úteis depois')
+   +tile('r','Reescoramento em',dm(r.rees),WD[r.rees.getDay()]+', no dia seguinte')
+   +tile('n','Próximo ciclo em',dm(r.next),'forma dos pilares do pavimento seguinte')
+   +'</div>';
+  var msg;
+  if(diff<=0)msg='A laje seria concretada dentro da meta de '+p.meta+' dias úteis'+(diff<0?', com '+(-diff)+(diff===-1?' dia':' dias')+' de folga':'')+'.';
+  else msg='A concretagem sai '+diff+(diff===1?' dia útil':' dias úteis')+' depois da meta de '+p.meta+'.';
+  msg+=corr>=28?' São '+corr+' dias corridos entre concretagens, perto do "um mês" que a obra relatou como realidade.':' São '+corr+' dias corridos entre concretagens; a obra relatou cerca de um mês por laje.';
+  h+='<p class="verdict">'+esc(msg)+'</p>';
+  $('#out').innerHTML=h;
+  $('#days').innerHTML=r.cells.map(function(c){
+    var w=WD[c.date.getDay()];
+    if(c.kind==='off')return '<div class="d off" title="'+w+' '+dm(c.date)+' · sem trabalho"><b>'+dm(c.date)+'</b><small>'+w+'</small></div>';
+    if(c.kind==='hol')return '<div class="d hol" title="'+w+' '+dm(c.date)+' · '+(isHol(c.date)?'feriado':'férias coletivas')+'"><b>'+dm(c.date)+'</b><small>'+(isHol(c.date)?'feriado':'férias')+'</small></div>';
+    return '<div class="d '+c.kind+'" title="'+w+' '+dm(c.date)+' · dia útil '+c.n+' · '+PHASE_NAME[c.kind]+'"><b>'+dm(c.date)+'</b><small>'+w+' · d'+c.n+'</small></div>';
+  }).join('');
+  $$('.preset').forEach(function(b){
+    var q=PRESETS[+b.dataset.i];
+    b.classList.toggle('on',q.fp===p.fp&&q.dk===p.dk&&q.ar===p.ar&&q.pa===p.pa&&q.meta===p.meta&&$('#in-ini').value==='2026-11-05'&&!p.sab);
+  });
+}
+function wireSim(){
+  $('#presets').innerHTML=PRESETS.map(function(q,i){return '<button type="button" class="preset" data-i="'+i+'">'+esc(q.nome)+'</button>'}).join('');
+  $('#presets').addEventListener('click',function(e){
+    var b=e.target.closest('.preset');if(!b)return;
+    var q=PRESETS[+b.dataset.i];
+    $('#in-ini').value='2026-11-05';$('#in-fp').value=q.fp;$('#in-dk').value=q.dk;$('#in-ar').value=q.ar;$('#in-pa').value=q.pa;$('#in-meta').value=String(q.meta);$('#in-sab').checked=false;runSim();
+  });
+  ['#in-ini','#in-fp','#in-dk','#in-ar','#in-pa','#in-meta','#in-sab'].forEach(function(id){
+    $(id).addEventListener('input',runSim);$(id).addEventListener('change',runSim);
+  });
+  runSim();
+}
+
+/* ---------- equipes, atenção, pavimentos, glossário ---------- */
+function renderTeams(){
+  $('#teams').innerHTML=TEAMS.map(function(t){return '<article class="card team"><span class="co">'+esc(t[1])+'</span><h3>'+esc(t[0])+'</h3><p>'+esc(t[2])+'</p></article>'}).join('');
+}
+function renderAtt(){
+  $('#att').innerHTML=ATT.map(function(a){return '<article class="card att'+(a.hot?' hot':'')+'"><header><h3>'+esc(a.t)+'</h3></header><div>'+tagHTML(a.tags)+'</div><p>'+esc(a.p)+'</p></article>'}).join('');
+}
+function renderFloors(){
+  var max=20;
+  $('#floors').innerHTML=FLOORS.map(function(f,i){
+    var total=f.seg.reduce(function(a,s){return a+s[1]},0);
+    var segs=f.seg.map(function(s){return '<div class="f-seg '+s[0]+'" style="width:'+(s[1]/max*100)+'%" title="'+PHASE_NAME[s[0]]+': '+s[1]+(s[1]>1?' dias':' dia')+'">'+s[1]+'</div>'}).join('');
+    var refs='<span class="f-ref" style="left:'+(12/max*100)+'%">'+(i===0?'<em>meta 12</em>':'')+'</span><span class="f-ref" style="left:'+(15/max*100)+'%">'+(i===0?'<em>meta 15</em>':'')+'</span>';
+    return '<div class="f-row"><b>'+f.n+'</b><div class="f-track" role="img" aria-label="'+f.n+' pavimento: '+total+' dias úteis">'+segs+refs+'</div><div class="f-end"><b>'+total+' dias</b>concretagem em '+f.conc+'<br>'+f.gap+'</div></div>';
+  }).join('');
+}
+var norm=function(s){return s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase()};
+function filterGl(){
+  var q=norm($('#gl-q').value.trim());
+  var list=GL.filter(function(g){return !q||norm(g[0]+' '+g[1]).indexOf(q)>=0});
+  $('#gl').innerHTML=list.length?list.map(function(g){return '<div class="card gl-item"><dt>'+esc(g[0])+'</dt><dd>'+esc(g[1])+'</dd></div>'}).join(''):'<p class="gl-empty">Nenhum termo encontrado. Tente outra palavra.</p>';
+}
+
+renderCycle();renderTabs();wireGuide();select(0,false);
+buildGantt();wireSim();renderTeams();renderAtt();renderFloors();
+$('#gl-q').addEventListener('input',filterGl);filterGl();
+})();
+</script>
+<script>
+(function(){
+"use strict";
+var scroller=document.getElementById('scroll');
+var secs=Array.prototype.slice.call(document.querySelectorAll('.sec[id]'));
+var items=Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+var crumb=document.getElementById('crumb-now');
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function closeNav(){document.body.classList.remove('navopen')}
+function go(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+document.getElementById('menuBtn').addEventListener('click',function(){document.body.classList.toggle('navopen')});
+document.getElementById('scrim').addEventListener('click',closeNav);
+document.getElementById('toTop').addEventListener('click',function(){scroller.scrollTo({top:0,behavior:reduce?'auto':'smooth'})});
+items.forEach(function(b){b.addEventListener('click',function(){go(b.dataset.target);closeNav()})});
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[href^="#"]');
+  if(a&&a.getAttribute('href').length>1){e.preventDefault();go(a.getAttribute('href').slice(1))}
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav()});
+var cur=null,tick=false;
+function spy(){
+  tick=false;
+  var line=scroller.getBoundingClientRect().top+110,now=secs[0];
+  secs.forEach(function(s){if(s.getBoundingClientRect().top<=line)now=s});
+  if(scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-4)now=secs[secs.length-1];
+  if(now.id===cur)return;cur=now.id;
+  items.forEach(function(b){var on=b.dataset.target===cur;b.classList.toggle('current',on);if(on){crumb.textContent=b.dataset.label;if(b.scrollIntoView)b.scrollIntoView({block:'nearest'})}});
+}
+scroller.addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(spy)}});
+spy();
+})();
+</script>
+</body>
+</html>
