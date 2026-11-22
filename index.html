@@ -340,10 +340,21 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .foot ul{display:flex;flex-direction:column;gap:8px;line-height:1.6}
 .foot a{color:var(--royal-700);text-underline-offset:3px}
 
+/* ===== processos de apoio ===== */
+.sup-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.sup{display:flex;flex-direction:column;gap:11px;padding:20px;border-top:3px solid var(--sky-400)}
+.sup h3{font-size:15px;font-weight:700;margin:0}
+.sup .who{font-size:10px;font-weight:700;color:var(--royal-700);text-transform:uppercase;letter-spacing:.14em}
+.sup-tags{display:flex;flex-wrap:wrap;gap:6px}
+.flow{counter-reset:f;display:flex;flex-direction:column;gap:9px;font-size:13px;line-height:1.6;color:var(--ink-soft)}
+.flow li{counter-increment:f;display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px}
+.flow li::before{content:counter(f);width:22px;height:22px;border-radius:50%;background:var(--navy-800);color:var(--yellow);display:grid;place-items:center;font-size:11px;font-weight:700;margin-top:1px}
+.sup-risk{padding:12px 14px;border-radius:var(--r-md);background:var(--sky-50);border:1px solid var(--line);font-size:13px;color:var(--ink-soft);line-height:1.65}
+
 /* ===== celular e telas médias ===== */
 @media (max-width:1100px){
   .cycle,.facts{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .teams,.att-grid,.chain{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .teams,.att-grid,.chain,.sup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:980px){
@@ -365,7 +376,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
   .model{position:static}
 }
 @media (max-width:680px){
-  .cycle,.facts,.teams,.att-grid,.chain,.gl,.dl{grid-template-columns:minmax(0,1fr)}
+  .cycle,.facts,.teams,.att-grid,.chain,.sup-grid,.gl,.dl{grid-template-columns:minmax(0,1fr)}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .res-main{grid-template-columns:repeat(2,minmax(0,1fr))}
   .f-row{grid-template-columns:48px minmax(0,1fr)}
@@ -403,14 +414,15 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 <div class="nav-group">Planejamento</div>
 <button type="button" class="nav-item" data-target="cronograma" data-label="Cronograma do 6º pavimento"><span class="num">4</span><span class="txt">Cronograma do 6º</span></button>
 <button type="button" class="nav-item" data-target="simulador" data-label="Simulador de prazo"><span class="num">5</span><span class="txt">Simulador de prazo</span></button>
-<button type="button" class="nav-item" data-target="equipes" data-label="Equipes do ciclo"><span class="num">6</span><span class="txt">Equipes</span><span class="count">9</span></button>
+<button type="button" class="nav-item" data-target="equipes" data-label="Equipes do ciclo"><span class="num">6</span><span class="txt">Equipes</span><span class="count">12</span></button>
+<button type="button" class="nav-item" data-target="apoio" data-label="Processos de apoio"><span class="num">7</span><span class="txt">Processos de apoio</span><span class="count">3</span></button>
 <div class="nav-group">Análise</div>
-<button type="button" class="nav-item" data-target="atencao" data-label="Pontos de atenção"><span class="num">7</span><span class="txt">Pontos de atenção</span></button>
-<button type="button" class="nav-item" data-target="dados" data-label="Números e dados"><span class="num">8</span><span class="txt">Números e dados</span></button>
-<button type="button" class="nav-item" data-target="proximos" data-label="Pendências e próximos passos"><span class="num">9</span><span class="txt">Próximos passos</span></button>
+<button type="button" class="nav-item" data-target="atencao" data-label="Pontos de atenção"><span class="num">8</span><span class="txt">Pontos de atenção</span></button>
+<button type="button" class="nav-item" data-target="dados" data-label="Números e dados"><span class="num">9</span><span class="txt">Números e dados</span></button>
+<button type="button" class="nav-item" data-target="proximos" data-label="Pendências e próximos passos"><span class="num">10</span><span class="txt">Próximos passos</span></button>
 <div class="nav-group">Referência</div>
-<button type="button" class="nav-item" data-target="glossario" data-label="Glossário"><span class="num">10</span><span class="txt">Glossário</span></button>
-<button type="button" class="nav-item" data-target="fontes" data-label="Fontes"><span class="num">11</span><span class="txt">Fontes</span></button>
+<button type="button" class="nav-item" data-target="glossario" data-label="Glossário"><span class="num">11</span><span class="txt">Glossário</span></button>
+<button type="button" class="nav-item" data-target="fontes" data-label="Fontes"><span class="num">12</span><span class="txt">Fontes</span></button>
 
   <div class="nav-foot"><div class="foot-row">
     <img class="foot-logo-img" src="data:image/webp;base64,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" alt="EngePro">
@@ -434,10 +446,10 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
       <a class="btn btn-y" href="#etapas">Ver as etapas</a>
       <a class="btn btn-o" href="#simulador">Simular o prazo</a>
     </div>
-    <p class="hero-meta">Baseado na visita de 03/11/2026, no médio prazo e no plano semanal S64. Atualizado em 13/11/2026 com o que a ATR corrigiu e confirmou na reunião.</p>
+    <p class="hero-meta">Baseado nas visitas de 03, 10 e 17/11/2026, na reunião de 13/11, no médio prazo e no plano semanal S64. Atualizado em 22/11/2026 com o que a ATR contou na visita de 17/11.</p>
   </div>
   <div class="tiles" aria-label="Números do ciclo">
-    <div class="tile"><b>12</b><span>dias úteis para concretar a laje, com pé-direito baixo</span><em>Meta da obra (dias trabalhados, não corridos)</em></div><div class="tile"><b>15</b><span>dias úteis para concretar a laje, com pé-direito alto</span><em>Meta da obra (dias trabalhados, não corridos)</em></div><div class="tile"><b>~30</b><span>dias corridos por laje com a empreiteira anterior, segundo o engenheiro</span><em>Relato de 13/11, a confirmar</em></div><div class="tile"><b>6º</b><span>pavimento: os pilares começaram em 06/11 (o plano era 05/11) e a concretagem segue marcada para 23/11</span><em>Plano e relato de 13/11</em></div>
+    <div class="tile"><b>12</b><span>dias úteis para concretar a laje, com pé-direito baixo</span><em>Meta da obra (dias trabalhados, não corridos)</em></div><div class="tile"><b>15</b><span>dias úteis para concretar a laje, com pé-direito alto</span><em>Meta da obra (dias trabalhados, não corridos)</em></div><div class="tile"><b>~30</b><span>dias corridos por laje com a empreiteira anterior, segundo o engenheiro</span><em>Relato de 13/11, a confirmar</em></div><div class="tile"><b>6º</b><span>pavimento: os pilares começaram em 06/11 (o plano era 05/11) e a concretagem segue marcada para 23/11, com trabalho no feriado de 20/11</span><em>Plano e relatos de 13 e 17/11</em></div>
   </div>
 </section>
 
@@ -511,7 +523,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
       <div class="card"><b>Ao mesmo tempo</b><h3>O que anda junto</h3><p>A forma da viga de borda é feita junto com o deck, a armação dos pilares começa com a forma, e as passagens e infras entram no último dia do deck e vão até o fim da armação.</p></div>
       <div class="card"><b>26/11 e 27/11</b><h3>Depois da concretagem</h3><p>A protensão é três dias úteis depois da concretagem, e o reescoramento e a limpeza no dia seguinte. A forma dos pilares do 7º pavimento já começa em 24/11.</p></div>
     </div>
-    <p class="insight"><span class="tag relato">Relato de 13/11</span><br><br>O engenheiro contou como está o 6º pavimento: <b>os pilares começaram em 06/11</b> (e não em 05/11) porque o concreto de 04/11 ainda não estava firme na quinta; <b>a forma das vigas e os arremates estão atrasados</b> e seguram o posicionamento das vigas já armadas; e <b>a malha da laje entra em 16/11</b>, não em 13/11. A concretagem continua marcada para <b>23/11</b>. Para ver o efeito de começar um dia depois, coloque 06/11 como início no simulador: pela conta, a concretagem vai para 24/11.</p>
+    <p class="insight"><span class="tag relato">Relato de 13/11</span><br><br>O engenheiro contou como está o 6º pavimento: <b>os pilares começaram em 06/11</b> (e não em 05/11) porque o concreto de 04/11 ainda não estava firme na quinta; <b>a forma das vigas e os arremates estão atrasados</b> e seguram o posicionamento das vigas já armadas; e <b>a malha da laje entra em 16/11</b>, não em 13/11. A concretagem continua marcada para <b>23/11</b>. Para ver o efeito de começar um dia depois, coloque 06/11 como início no simulador: pela conta, a concretagem vai para 24/11.<br><br><span class="tag relato">Relato de 17/11</span> <span class="tag conf">A confirmar</span><br><br>No papel, 23/11 é o 12º dia de trabalho. Na prática será o 13º, porque a empreiteira vai trabalhar na sexta, 20/11, feriado em que a obra normalmente não trabalharia. Contando de 05/11, o início do plano, 23/11 é o 13º dia com o trabalho de 20/11. No simulador, com início em 06/11, marque "Trabalhar no feriado de 20/11" e a concretagem fica em <b>23/11</b>; sem marcar, vai para <b>24/11</b>. O trecho do áudio é curto, então vale confirmar com o engenheiro.</p>
     <p class="note" style="margin-top:16px">Calendário do médio prazo: 20/11 (Consciência Negra) não tem trabalho e as férias coletivas vão de 19/12 a 3/01. O plano semanal S64 antecipa em um dia a armação dos pilares do 6º (04/11) e marca a montagem das formas dos pilares para 06 e 07/11. Mesmo assim cabe antes do deck, porque o plano semanal conta o sábado.</p>
   </section>
 
@@ -534,6 +546,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
           <div class="field full"><label for="in-meta">Comparar com a meta de</label>
             <select id="in-meta"><option value="12">12 dias úteis (pé-direito baixo)</option><option value="15">15 dias úteis (pé-direito alto)</option></select></div>
           <label class="check full" for="in-sab"><input type="checkbox" id="in-sab"> Contar o sábado como dia de trabalho</label>
+          <label class="check full" for="in-fer"><input type="checkbox" id="in-fer"> Trabalhar no feriado de 20/11 (relato de 17/11)</label>
         </div>
         <p class="note" style="margin-top:16px">A concretagem dura 1 dia. As passagens e infras andam junto com a armação e só pesam se demorarem mais que ela. A concretagem anterior (5º pavimento) está no plano semanal em 04/11.</p>
       </div>
@@ -566,11 +579,62 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
     </div>
   </section>
 
+<section class="sec" id="apoio">
+    <div class="sec-head">
+      <p class="eyebrow">Processos de apoio</p>
+      <h2>O que alimenta o ciclo por fora</h2>
+      <p>Três processos não são etapas da laje, mas decidem se o material e as pessoas chegam a tempo: compras, recebimento do aço e liberação de pessoal. Vieram da visita de 17/11, são relato da equipe da ATR e ainda não foram vistos no campo nem medidos em dias.</p>
+    </div>
+    <div class="sup-grid">
+      <article class="card sup">
+        <span class="who">Almoxarife, engenharia, orçamentos e suprimentos</span>
+        <h3>Compras e aprovações</h3>
+        <div class="sup-tags"><span class="tag relato">Relato</span> <span class="tag conf">A confirmar</span></div>
+        <ol class="flow">
+          <li><span>A engenharia ou o pessoal da obra avisa o almoxarife do que precisa.</span></li>
+          <li><span>O almoxarife abre o pedido no Pipefy, o quadro de suprimentos de todas as obras da ATR, e no sistema de gestão.</span></li>
+          <li><span>O engenheiro da obra aprova a quantidade. Hoje ele pede ao almoxarife que comente o consumo antes.</span></li>
+          <li><span>O setor de orçamentos aprova a solicitação e pode devolvê-la com perguntas.</span></li>
+          <li><span>Suprimentos cota e escolhe o fornecedor, em geral pelo preço.</span></li>
+          <li><span>Aprovação do pedido: coordenador, orçamentos (que confere a verba) e, acima de cerca de R$ 5 mil, o gerente. O valor é a confirmar.</span></li>
+          <li><span>O pedido segue ao fornecedor, e o material é conferido na chegada.</span></li>
+        </ol>
+        <p class="sup-risk">Segundo o engenheiro, são cinco ou seis setores de aprovação. Há cerca de três meses o orçamento passou a questionar quantidade, aplicação e verba, e as perguntas voltam para a obra. No exemplo mostrado, um item único levaria cerca de um mês entre a solicitação (20/10) e o envio ao fornecedor, previsto para 19/11 no melhor caso. Ele frisou que não busca culpados e que a empresa tem razão em querer controlar o gasto.</p>
+      </article>
+      <article class="card sup">
+        <span class="who">Almoxarife e grua</span>
+        <h3>Recebimento e conferência do aço</h3>
+        <div class="sup-tags"><span class="tag relato">Relato</span></div>
+        <ol class="flow">
+          <li><span>O aço chega cortado e dobrado, com etiquetas que trazem o projeto, o local de aplicação e o formato da peça.</span></li>
+          <li><span>O almoxarife confere formato, quantidade e pedido.</span></li>
+          <li><span>A grua leva o feixe ao local de armazenamento, onde a conferência se repete e se procuram as etiquetas.</span></li>
+          <li><span>Se falta uma peça, ele avisa o fornecedor e a reposição segue.</span></li>
+          <li><span>Os armadores montam cada peça no lugar, conforme o projeto.</span></li>
+        </ol>
+        <p class="sup-risk">Os feixes são grossos e misturam vários formatos, com etiquetas no meio, então a falta de uma peça costuma aparecer só depois. A ficha de verificação de materiais está fora do ar, e a conferência é visual. No 6º pavimento faltaram peças de dois formatos, e o atraso foi de quase um dia. Telas e escoras também atrasaram cerca de um dia, e o fornecedor de tela foi trocado. A EngePro ainda não viu a chegada do aço.</p>
+      </article>
+      <article class="card sup">
+        <span class="who">Segurança do trabalho e portal de documentos</span>
+        <h3>Liberação de pessoal na obra</h3>
+        <div class="sup-tags"><span class="tag relato">Relato</span> <span class="tag conf">A confirmar</span></div>
+        <ol class="flow">
+          <li><span>A empreiteira nova recebe um link e se cadastra no portal.</span></li>
+          <li><span>Ela anexa os documentos de cada funcionário: ASO, exames conforme o PCMSO, NR-6, NR-12, NR-18, NR-35, e ficha de registro ou contrato.</span></li>
+          <li><span>A técnica da obra dá a integração e anexa a lista de presença.</span></li>
+          <li><span>O assistente de segurança aprova ou reprova no portal.</span></li>
+          <li><span>Só depois de aprovado o funcionário pode trabalhar. Com documento vencido ou reprovado, sai da obra até regularizar.</span></li>
+        </ol>
+        <p class="sup-risk">O assistente valida sozinho os documentos das empreiteiras de cinco obras. O painel do portal mostrava média de 13 horas para liberar um colaborador, e muitas empreiteiras só procuram a segurança quando o funcionário já está esperando na entrada. A integração do portal com a catraca está em andamento. Ainda não se sabe se isso atrasa a entrada de gente nova na estrutura.</p>
+      </article>
+    </div>
+  </section>
+
 <section class="sec" id="atencao">
     <div class="sec-head">
       <p class="eyebrow">Pontos de atenção</p>
       <h2>Onde o ciclo pode atrasar</h2>
-      <p>Para o engenheiro, o que mais atrasa é a liberação do assoalho, e não as formas dos pilares nem o material. Quase tudo abaixo é relato dele e ainda precisa ser confirmado com observação e dados.</p>
+      <p>Na primeira visita, o engenheiro apontou como o que mais atrasa a liberação do assoalho, e não as formas dos pilares nem o material. Nas conversas seguintes apareceram também arremates, mão de obra, segurança, aprovação de compras e conferência de material. Quase tudo é relato e ainda precisa ser confirmado com observação e dados.</p>
     </div>
     <div class="att-grid" id="att"></div>
     <div class="split">
@@ -584,12 +648,14 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
           <li>No primeiro pavimento de pé-direito alto a ordem foi invertida: assoalho com linha de vida primeiro, vigas depois. Quem trabalha a 4 ou 5 metros não teria onde se prender.</li>
           <li>Pelo relato de 03/11, há cerca de duas semanas a empreiteira nova passou a subir os tubos da linha de vida, por acordo. O áudio deste trecho é ruim; a confirmar.</li>
           <li>Em 13/11 a ATR disse que o quadro de carpinteiros já está no limite do histograma de mão de obra (um cargo de pedreiro foi convertido em carpinteiro). A ATR estuda contratar um oficial de obra, que pode trabalhar como pedreiro ou carpinteiro, e um servente para apoiar a segurança.</li>
+          <li>Em 10/11 houve dois quase acidentes: um painel do deck escapou e uma escora caiu no andar de baixo, onde havia gente. A segurança os atribuiu a muitos serviços marcados para o mesmo dia e a rádios pouco usados.</li>
+          <li>Em 17/11, o assistente de segurança disse cuidar sozinho da parte de documentos de cinco obras, enquanto a técnica da Atmos fica em campo todo dia. A liberação de pessoal está em "Processos de apoio".</li>
         </ul>
       </div>
       <div class="card">
         <h3>O que mudou desde a reunião de 30/10</h3>
         <ul class="bullets">
-          <li><b>Material.</b> Em 30/10 a ATR disse que material não atrasa. Na visita, o engenheiro citou três episódios pontuais.</li>
+          <li><b>Material.</b> Em 30/10 a ATR disse que material não atrasa. Em 03/11 o engenheiro citou três episódios pontuais, e em 17/11 o almoxarife confirmou atrasos de telas, escoras e aço, de cerca de um dia cada, com troca do fornecedor de tela.</li>
           <li><b>Clima.</b> Não foi citado em 30/10. Na visita, o engenheiro confirmou que a chuva atrapalha.</li>
           <li><b>Duração real.</b> Em 30/10, de 20 a 25 dias por pavimento; na visita, cerca de um mês. Em 13/11 o engenheiro esclareceu que a empreiteira anterior levava um mês corrido por laje, e que a meta de 12 ou 15 dias é em dias trabalhados. O médio prazo prevê 19 a 21 dias corridos entre concretagens, e o "um mês" só se comprova com as datas reais.</li>
           <li><b>Área da laje.</b> Em 30/10, cerca de 2 mil m²; na visita, 750 m² de deck. Podem ser medidas diferentes, e nenhum cronograma traz a área.</li>
@@ -658,6 +724,10 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
         <div><dt>Vida útil das formas</dt><dd>fenólico: cerca de 5 pavimentos; plastificado: cerca de 8</dd></div>
         <div><dt>Planejamento</dt><dd>linha de base; todo mês, um recorte de 3 meses; plano semanal na sexta</dd></div>
         <div><dt>Médio prazo recebido</dt><dd>02/11/2026 a 12/04/2027</dd></div>
+        <div><dt>Apartamentos</dt><dd>326, segundo o engenheiro (17/11)</dd></div>
+        <div><dt>Aprovação de compras</dt><dd>cinco ou seis setores; gerente acima de cerca de R$ 5 mil (a confirmar)</dd></div>
+        <div><dt>Liberação no portal de segurança</dt><dd>média de 13 horas (painel de 17/11)</dd></div>
+        <div><dt>Etiquetas do aço</dt><dd>projeto, local de aplicação e formato da peça</dd></div>
       </dl>
     </div>
   </section>
@@ -669,7 +739,18 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
       <p>A transcrição da visita é automática e o áudio foi gravado dentro de um canteiro de obras. O que está nesta lista precisa ser confirmado antes de entrar no mapa em BPMN.</p>
     </div>
     <div class="card" style="margin-bottom:20px">
-      <h3>Ajustado nesta versão, a partir da reunião de 13/11</h3>
+      <h3>Ajustado nesta versão, a partir da visita de 17/11</h3>
+      <ul class="bullets">
+        <li><b>Processos de apoio.</b> Nova seção com compras e aprovações, recebimento do aço e liberação de pessoal, com o que foi dito em cada um.</li>
+        <li><b>Material.</b> Telas, escoras e aço atrasaram cerca de um dia cada. No 6º faltaram peças de aço de dois formatos, e os feixes chegam com etiquetas no meio, o que dificulta a conferência.</li>
+        <li><b>Compras.</b> Cinco ou seis setores de aprovação e controle de orçamento mais detalhado há cerca de três meses. Um item único levaria cerca de um mês até o envio ao fornecedor, no melhor caso.</li>
+        <li><b>6º pavimento.</b> 23/11 é o 12º dia no papel e será o 13º na prática, com trabalho no feriado de 20/11. O simulador ganhou a opção de trabalhar em 20/11 e dois cenários prontos.</li>
+        <li><b>Da visita de 10/11.</b> A falta de gente na estrutura entrou como causa central, e os dois quase acidentes entraram em Segurança.</li>
+        <li><b>Ainda não visto.</b> A chegada do aço no campo: a visita de 17/11 foi só de entrevistas e não chegou à laje.</li>
+      </ul>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <h3>Ajustado na versão de 13/11, a partir da reunião com a ATR</h3>
       <ul class="bullets">
         <li><b>Pilares.</b> As gaiolas sobem montadas pela grua. Só cinco pilares do fundo da laje, fora do alcance da grua, têm a armadura montada no local.</li>
         <li><b>Vigas e punção.</b> As armaduras são pré-montadas no chão e sobem já montadas, só são posicionadas. Os blocos junto aos pilares são a própria punção.</li>
@@ -686,6 +767,10 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
           <li><span>As datas reais do 6º pavimento: pilares em 06/11 e malha da laje em 16/11 (relato de 13/11). A concretagem do 5º em 04/11 já foi confirmada pelo engenheiro.</span></li>
           <li><span>Quem é a nova empreiteira de estrutura (a Ajax executa o 5º e o 6º no plano) e qual o tamanho de cada frente.</span></li>
           <li><span>Por que o 8º pavimento tem 19 dias úteis no médio prazo, e se a espera de 3 dias antes do deck é intencional.</span></li>
+          <li><span>Se a empreiteira de estrutura vai mesmo trabalhar na sexta, 20/11 (feriado), e se isso mantém a concretagem em 23/11.</span></li>
+          <li><span>Qual é o sistema de gestão e qual a ficha de verificação de materiais que está fora do ar, e se ela volta.</span></li>
+          <li><span>A partir de qual valor o gerente aprova um pedido (cerca de R$ 5 mil, dito sem certeza) e quantos dias leva cada aprovação, por uma amostra de pedidos do Pipefy.</span></li>
+          <li><span>Quais peças de aço faltaram no 6º pavimento e quando chegaram.</span></li>
           <li><span>Área da laje (750 m² ou cerca de 2 mil m²) e duração real por pavimento, em dias úteis.</span></li>
           <li><span>Qual ferramenta guarda o médio e o curto prazo. O S64 traz o aviso "Tempo não incluído", o que sugere um campo de clima sem uso.</span></li>
         </ul>
@@ -693,13 +778,14 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
       <div class="card">
         <h3>Próximos passos da EngePro</h3>
         <ul class="todo">
-          <li><span>Visitar a obra na terça, 17/11, por volta das 16h, para ver a chegada do aço (o dos pilares da próxima laje) e a logística, além da armação da laje, que entra em 16/11.</span></li>
+          <li><span>Remarcar a visita para ver a chegada do aço dos pilares da próxima laje e os armadores na laje. A de 17/11 foi só de entrevistas: a equipe saiu sem subir e disse que volta outro dia.</span></li>
           <li><span>Pedir o plano semanal S65 e conferir se a lista de contatos prometida em 30/10 chegou.</span></li>
           <li><span>Decidir se haverá visita extra: uma visita por semana perde muitos dados, porque várias atividades correm juntas.</span></li>
-          <li><span>Montar o fluxo em BPMN a partir das 8 etapas, já com as correções de 13/11, e entregar o modelo final do mapeamento na semana que vem ou na seguinte.</span></li>
-          <li><span>Receber da ATR, até terça (17/11), os comentários sobre este mapa, com destaque para onde a segurança trava a produção. Pode ser por áudio.</span></li>
+          <li><span>Montar o fluxo em BPMN a partir das 8 etapas, já com as correções de 13/11 e com os três processos de apoio. Na reunião de 13/11, o modelo final ficou para a semana seguinte ou a posterior (até cerca de 27/11).</span></li>
+          <li><span>Conferir com a ATR se há comentários sobre este mapa, que tinham prazo em 17/11 e não aparecem na gravação da visita, com destaque para onde a segurança trava a produção. Pode ser por áudio.</span></li>
           <li><span>Registrar a data real de cada concretagem a partir do 5º pavimento e comparar com o médio prazo e com o "um mês" relatado.</span></li>
-          <li><span>Entrevistar o restante da equipe da obra. Já foram ouvidos o mestre de obras, o assistente de engenharia e a técnica de segurança; a ATR vai confirmar se o coordenador e o assistente de segurança estarão na terça. Se não estiverem, a conversa é online.</span></li>
+          <li><span>Completar as entrevistas. Em 17/11 foram ouvidos o almoxarife e o assistente de segurança, mas só em parte: faltam as perguntas de campo da segurança (inspeção, linha de vida, EPI, quase acidentes) e as do almoxarife (mangueiras, material alugado, consumíveis, EPI). Pode ser online.</span></li>
+          <li><span>Pedir à ATR uma amostra de pedidos do Pipefy com as datas de cada etapa, para medir quanto tempo as aprovações levam e onde o pedido espera mais.</span></li>
           <li><span>Combinar água e lanche antes das próximas visitas: uma pessoa da equipe passou mal de calor no alto da obra.</span></li>
         </ul>
       </div>
@@ -730,6 +816,8 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
         <li>Plano semanal de curto prazo S64 (02 a 07/11/2026), para datas e empreiteiras do 5º e do 6º pavimento.</li>
         <li>Médio prazo ATM (arquivo MS Project e MP_Atmos.pdf), anexado em 06/11, para prazos e datas do ciclo.</li>
         <li>Reunião ATR × EngePro de 13/11/2026 (41 min), gravada, para as correções do mapa e o andamento do 6º pavimento.</li>
+        <li>Visita e entrevistas de 10/11/2026 (1h12), gravadas, para a causa central do atraso e os quase acidentes.</li>
+        <li>Visita e entrevistas na ATR de 17/11/2026 (52 min), gravadas, para compras, recebimento do aço, liberação de pessoal e a conta dos dias do 6º pavimento.</li>
       </ul>
     </div>
     <div>
@@ -738,7 +826,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
         <li><a href="https://claude.ai/artifact/PrVJxgYJPisQ79pHsdQtRv">Relatório completo da 1ª visita</a></li>
         <li><a href="https://claude.ai/artifact/PckivebVYgPWK8yt6KUeVD">Guia de capacitação da equipe: vídeos e sites</a></li>
       </ul>
-      <p class="note" style="margin-top:22px">EngePro Consultoria · Projeto ATR · 13/11/2026</p>
+      <p class="note" style="margin-top:22px">EngePro Consultoria · Projeto ATR · 22/11/2026</p>
     </div>
   </div>
 </section>
@@ -766,13 +854,13 @@ var dm=function(d){return pad(d.getDate())+'/'+pad(d.getMonth()+1)};
 var dmy=function(d){return dm(d)+'/'+d.getFullYear()};
 var isHol=function(d){return HOL.indexOf(iso(d))>=0};
 var isFerias=function(d){var k=iso(d);return k>=FERIAS[0]&&k<=FERIAS[1]};
-function isWork(d,sab){var w=d.getDay();if(w===0)return false;if(w===6&&!sab)return false;return !isHol(d)&&!isFerias(d)}
-function nextWork(d,sab,n){var x=new Date(d.getTime()),c=0;while(c<n){x=addDays(x,1);if(isWork(x,sab))c++}return x}
+function isWork(d,sab,wh){var w=d.getDay();if(w===0)return false;if(w===6&&!sab)return false;return (!isHol(d)||!!wh)&&!isFerias(d)}
+function nextWork(d,sab,n,wh){var x=new Date(d.getTime()),c=0;while(c<n){x=addDays(x,1);if(isWork(x,sab,wh))c++}return x}
 function simulate(p){
   var phases=[['pilares',p.fp],['deck',p.dk],['armacao',p.ar],['parada',p.pa],['concretagem',1]].filter(function(x){return x[1]>0});
   var cells=[],d=parseISO(p.ini),wi=0,pi=0,left=phases[0][1],guard=0;
   while(guard++<600){
-    if(isWork(d,p.sab)){
+    if(isWork(d,p.sab,p.wh)){
       wi++;cells.push({date:new Date(d.getTime()),kind:phases[pi][0],n:wi});left--;
       if(left===0){pi++;if(pi===phases.length)break;left=phases[pi][1]}
     }else{
@@ -781,7 +869,7 @@ function simulate(p){
     d=addDays(d,1);
   }
   var conc=cells[cells.length-1].date;
-  return {cells:cells,wi:wi,conc:conc,prot:nextWork(conc,p.sab,3),rees:nextWork(conc,p.sab,4),next:nextWork(conc,p.sab,1)};
+  return {cells:cells,wi:wi,conc:conc,prot:nextWork(conc,p.sab,3,p.wh),rees:nextWork(conc,p.sab,4,p.wh),next:nextWork(conc,p.sab,1,p.wh)};
 }
 //</engine>
 
@@ -802,7 +890,7 @@ var STAGES=[
 {n:1,nome:'Pilares',curto:'Pilares',
  quem:'Ajax faz forma e armação; Seltasul loca os eixos.',quando:'6º pavimento: 05 a 09/11',
  resumo:'A partir do dia seguinte à concretagem, começam os pilares do próximo pavimento: locação, forma e armação.',
- fazem:['O topógrafo loca os eixos, mas não em toda laje; às vezes fica só o eixo marcado e o prumo é repassado de baixo.','Os carpinteiros pregam um colarinho no pé de cada pilar, referência de onde a forma começa. A forma é montada em U, sem fechar a frente.','As gaiolas de armadura dos pilares são montadas embaixo e sobem prontas, levadas pela grua, já com espaçadores plásticos. Só então a forma é fechada e travada com barrotes, agulhas, borboletas e aprumadores.','Exceção: cinco pilares do fundo da laje, fora do alcance da grua. O aço deles sobe sem montar e a armadura é montada no local onde o pilar será concretado, porque carregar a gaiola pronta na mão é pesado demais. Se esse serviço atrasar, o resto atrasa junto.','O aço dos pilares chega à obra cortado e dobrado, mas não montado.','A forma é reaproveitada de laje em laje, enquanto a seção e o pé-direito não mudarem. O fenólico (rosa) rende cerca de 5 pavimentos e o plastificado (preto), cerca de 8. A obra escolheu o fenólico por ser mais barato.','As formas das vigas são desformadas logo depois da concretagem (no S64, 05/11), condição para protender.'],
+ fazem:['O topógrafo loca os eixos, mas não em toda laje; às vezes fica só o eixo marcado e o prumo é repassado de baixo.','Os carpinteiros pregam um colarinho no pé de cada pilar, referência de onde a forma começa. A forma é montada em U, sem fechar a frente.','As gaiolas de armadura dos pilares são montadas embaixo e sobem prontas, levadas pela grua, já com espaçadores plásticos. Só então a forma é fechada e travada com barrotes, agulhas, borboletas e aprumadores.','Exceção: cinco pilares do fundo da laje, fora do alcance da grua. O aço deles sobe sem montar e a armadura é montada no local onde o pilar será concretado, porque carregar a gaiola pronta na mão é pesado demais. Se esse serviço atrasar, o resto atrasa junto.','O aço dos pilares chega à obra cortado e dobrado, mas não montado. O almoxarife o confere pelas etiquetas, e a grua leva os feixes ao local de armazenamento.','A forma é reaproveitada de laje em laje, enquanto a seção e o pé-direito não mudarem. O fenólico (rosa) rende cerca de 5 pavimentos e o plastificado (preto), cerca de 8. A obra escolheu o fenólico por ser mais barato.','As formas das vigas são desformadas logo depois da concretagem (no S64, 05/11), condição para protender.'],
  equipes:['Ajax: carpintaria e armação','Seltasul: topografia'],
  plano:'6º pavimento: forma de pilares em 05 e 06/11 (2 dias) e armação de pilares de 05 a 09/11 (3 dias). A Seltasul aloca os eixos em 05/11.',
  att:{tags:['plano','relato'],txt:'O plano semanal marcava a montagem das formas de pilares em 06 e 07/11, um dia depois do médio prazo, e foi assim que aconteceu: o engenheiro confirmou que os pilares começaram na sexta, 06/11, porque o concreto de 04/11 não estava firme na quinta. Pelo plano, ainda cabia antes do deck, em 09/11, porque o semanal usa o sábado.'},
@@ -847,11 +935,11 @@ var STAGES=[
 {n:6,nome:'Armação, cabos e infraestrutura embutida',curto:'Armação',
  quem:'Ajax arma; JPM e Elioto instalam.',quando:'6º pavimento: 12 a 19/11',
  resumo:'É a etapa mais cheia do ciclo: armação, cabos de protensão, elétrica e hidráulica trabalham na mesma laje ao mesmo tempo, e a ordem importa.',
- fazem:['Enquanto o deck é montado, os armadores pré-montam no chão as armaduras das vigas e da punção (os blocos junto aos pilares). Elas sobem já montadas e só são posicionadas.','Na laje, a ordem é: vigas; tela soldada positiva (sobreposta e amarrada, por isso as vigas vêm antes); reforços positivos, em paralelo com as caixas e espumas da elétrica e da hidráulica, que cortam a tela; cabos de protensão nas alturas marcadas; mangueiras elétricas; ferros negativos sobre as vigas.','A mangueira elétrica não pode passar antes dos cabos de protensão, senão atrapalha, mas entra antes dos ferros negativos. As espumas deixam vazios para esgoto, gordura, pluvial e água, e são retiradas depois para passar os tubos.','O madeirite alugado não pode ser furado, então a elétrica usa caixas octogonais como caixa de passagem, cheias de serragem úmida compactada e com tampa, para o concreto não entrar.','Aço e cabos chegam cortados e dobrados por posição, mas não montados, pedidos por pavimento, com uma laje de antecedência. A EngePro ainda não viu essa chegada: a visita de terça, 17/11, por volta das 16h, é para acompanhar a entrega do aço dos pilares da próxima laje.'],
+ fazem:['Enquanto o deck é montado, os armadores pré-montam no chão as armaduras das vigas e da punção (os blocos junto aos pilares). Elas sobem já montadas e só são posicionadas.','Na laje, a ordem é: vigas; tela soldada positiva (sobreposta e amarrada, por isso as vigas vêm antes); reforços positivos, em paralelo com as caixas e espumas da elétrica e da hidráulica, que cortam a tela; cabos de protensão nas alturas marcadas; mangueiras elétricas; ferros negativos sobre as vigas.','A mangueira elétrica não pode passar antes dos cabos de protensão, senão atrapalha, mas entra antes dos ferros negativos. As espumas deixam vazios para esgoto, gordura, pluvial e água, e são retiradas depois para passar os tubos.','O madeirite alugado não pode ser furado, então a elétrica usa caixas octogonais como caixa de passagem, cheias de serragem úmida compactada e com tampa, para o concreto não entrar.','Aço e cabos chegam cortados e dobrados por posição, mas não montados, pedidos por pavimento, com uma laje de antecedência. O almoxarife confere formato, quantidade e pedido pelas etiquetas. Os feixes misturam vários formatos e as etiquetas ficam no meio, então a falta de uma peça costuma aparecer só depois. A ficha de verificação de materiais está fora do ar, e a conferência é visual. A EngePro ainda não viu essa chegada: a visita de 17/11 não chegou à laje e será remarcada.'],
  equipes:['Ajax: armação','Evehx: cabos de protensão','JPM: elétrica','Elioto: hidráulica'],
  plano:'6º pavimento: armação e cabos em 13 a 19/11 (5 dias) e passagens e infras em 12 a 19/11 (6 dias), em paralelo.',
- att:{tags:['relato'],txt:'Poucos armadores: desde que sobem na laje, levam 6 dias, contra 4 pensados. O cronograma mostrado traz 5, e o médio prazo mantém 5 do 6º ao 10º pavimento. No 6º, a malha da laje devia entrar em 13/11 e só entra na segunda, 16/11, porque a forma das vigas e os arremates não ficaram prontos.'},
- termos:['Tela soldada','Armadura positiva e negativa','Punção','Caixa octogonal','Cordoalha'],
+ att:{tags:['relato'],txt:'Poucos armadores: desde que sobem na laje, levam 6 dias, contra 4 pensados. O cronograma mostrado traz 5, e o médio prazo mantém 5 do 6º ao 10º pavimento. No 6º, a malha da laje devia entrar em 13/11 e só entra na segunda, 16/11, porque a forma das vigas e os arremates não ficaram prontos. Em 17/11 o almoxarife contou que, no 6º, faltaram peças de aço de dois formatos, o que atrasou quase um dia.'},
+ termos:['Tela soldada','Armadura positiva e negativa','Punção','Caixa octogonal','Cordoalha','Almoxarife'],
  modelo:'Armadura (azul-petróleo), cabo de protensão em curva (amarelo escuro) e caixas octogonais dentro da espessura da laje N+1.'},
 {n:7,nome:'Conferência e nova concretagem',curto:'Concretagem',
  quem:'O mestre geral confere; Ajax concreta.',quando:'6º pavimento: 23/11',
@@ -859,7 +947,7 @@ var STAGES=[
  fazem:['O mestre geral confere tudo, como na etapa 0: quantidade, bitola e posição do aço, reforços e embutidos.','A concretagem reinicia o ciclo: a forma dos pilares do pavimento seguinte começa logo depois.','Na véspera da concretagem do 5º pavimento (03/11), o plano semanal lista os fechamentos finais: rebaixo de sacada, degraus da escada, negativos, ganchos de cabos, reforços de shafts, caixinhas octogonais, mangueiras, limpeza da laje e guarda-corpo de periferia.'],
  equipes:['Mestre geral de obras','Ajax: concretagem','Evehx, Elioto e JPM acompanham','ATR-OBRA: plataforma de pedestre'],
  plano:'6º pavimento: concretagem em 23/11, o 12º dia útil. A forma dos pilares do 7º pavimento já começa em 24/11.',
- att:{tags:['plano','relato'],txt:'20/11 é feriado e fica fora da conta. Descontando o feriado, os 12 dias úteis de 05 a 23/11 batem com a meta. Com os pilares começando em 06/11, a conta teórica iria para 24/11; em 13/11 o engenheiro disse que mantém 23/11 (segunda), porque, segundo ele, a obra não pode dar esse luxo.'},
+ att:{tags:['plano','relato','conf'],txt:'20/11 é feriado e fica fora da conta. Descontando o feriado, os 12 dias úteis de 05 a 23/11 batem com a meta. Com os pilares começando em 06/11, a conta teórica iria para 24/11; em 13/11 o engenheiro disse que mantém 23/11 (segunda), porque, segundo ele, a obra não pode dar esse luxo. Em 17/11 foi dito que 23/11 é o 12º dia no papel e será o 13º na prática, porque a empreiteira vai trabalhar na sexta, 20/11, que a obra normalmente não trabalharia (trecho curto, a confirmar).'},
  termos:['Ciclo da laje','Dia útil'],
  modelo:'Concretagem da laje N+1 (amarelo). Quando termina, ela vira a nova laje N e o ciclo recomeça na etapa 1.'}
 ];
@@ -873,17 +961,22 @@ var TEAMS=[
 ['Topografia','Seltasul','Loca os eixos dos pilares, mas nem em todas as lajes. No 6º pavimento a locação está marcada para 05/11.'],
 ['Laboratório','CDTEC','Rompe os corpos de prova e emite o laudo que libera a protensão. Para o 5º pavimento, o rompimento está marcado para 07/11.'],
 ['Mestre geral de obras','ATR','Confere a armadura e os embutidos antes de cada concretagem.'],
-['Equipe própria','ATR-OBRA','Segurança (linha de vida e guarda-corpo), serviços gerais, grua e sinaleiro. No S64 aparecem também a plataforma de pedestre e a remoção de madeira no subsolo. A Metroform ajusta as telas e faz as ascensões dos sistemas U e V.']
+['Equipe própria','ATR-OBRA','Segurança (linha de vida e guarda-corpo), serviços gerais, grua e sinaleiro. No S64 aparecem também a plataforma de pedestre e a remoção de madeira no subsolo. A Metroform ajusta as telas e faz as ascensões dos sistemas U e V.'],
+['Almoxarifado','ATR','Recebe e confere o aço, as telas e os demais materiais, cadastra os funcionários novos na catraca, atende ferramentas e abre as solicitações de compra.'],
+['Segurança do trabalho','ATR','Uma técnica fica na Atmos todo dia, em campo e nas integrações. O assistente valida os documentos das empreiteiras no portal e cuida de cinco obras.'],
+['Engenharia, orçamentos e suprimentos','ATR','Aprovam e compram os materiais: o engenheiro da obra, o coordenador, o setor de orçamentos, suprimentos (que cota e fecha o pedido) e, acima de certo valor, o gerente.']
 ];
 
 var ATT=[
 {t:'Montagem do deck',tags:['relato'],hot:true,p:'É o que mais demora e a base para todos trabalharem. Trabalho manual que pede a maior equipe: cerca de 750 m² de laje, uns 350 a 370 painéis montados um a um. No médio prazo o deck do 6º tem 4 dias, e a armação só começa depois dele e da viga de borda.'},
 {t:'Arremates e forma das vigas',tags:['relato','leitura'],hot:true,p:'Em 13/11, o engenheiro apontou como o que trava o 6º pavimento: sem a forma das vigas e os arremates prontos, as vigas já armadas não são posicionadas, e a tela, as caixas e o resto da armação esperam, uma coisa depende da outra. A malha da laje, prevista para 13/11, entra só em 16/11. Esse trabalho não tem linha própria no cronograma e fica embutido no deck.'},
 {t:'Armação da laje',tags:['relato'],hot:true,p:'Poucos armadores. Desde que sobem na laje, levam 6 dias, contra 4 pensados. O cronograma mostrado traz 5, e o médio prazo mantém 5 dias do 6º ao 10º pavimento.'},
-{t:'Empreiteira de estrutura',tags:['relato','conf'],hot:true,p:'Houve reclamações nos dois sentidos e troca de encarregado de carpintaria sem avanço. No 5º pavimento, a empreiteira montou metade do assoalho e saiu. A nova equipe fez o resto e vai fazer o primeiro ciclo completo no 6º, sem conhecer o sistema de deck. No plano, a Ajax executa formas, armação, concretagem e reescoramento do 5º e do 6º; provavelmente é a nova equipe. Em 13/11 o engenheiro explicou que a troca serve para voltar ao plano original: concretar no 12º dia trabalhado (pé-direito baixo) ou no 15º (alto), e não corrido. A empreiteira anterior levava um mês corrido por laje.'},
+{t:'Empreiteira de estrutura',tags:['relato','conf'],hot:true,p:'Houve reclamações nos dois sentidos e troca de encarregado de carpintaria sem avanço. No 5º pavimento, a empreiteira montou metade do assoalho e saiu. A nova equipe fez o resto e vai fazer o primeiro ciclo completo no 6º, sem conhecer o sistema de deck. No plano, a Ajax executa formas, armação, concretagem e reescoramento do 5º e do 6º; provavelmente é a nova equipe. Em 13/11 o engenheiro explicou que a troca serve para voltar ao plano original: concretar no 12º dia trabalhado (pé-direito baixo) ou no 15º (alto), e não corrido. A empreiteira anterior levava um mês corrido por laje. Em 10/11, engenharia e mestre de obras apontaram a falta de gente na estrutura como a causa central do atraso, e ainda faltariam cerca de seis pessoas do efetivo combinado (a confirmar).'},
 {t:'Pé-direito alto',tags:['relato','plano'],p:'Pede dupla em andaime, escoras de 4 m e mais transporte. A meta sobe de 12 para 15 dias trabalhados. O médio prazo reflete isso: 12 dias úteis no 6º e 15 no 7º, no 9º e no 10º. O 8º aparece com 19.'},
-{t:'Segurança e produção',tags:['relato'],p:'A linha de vida precisa estar pronta antes de subir na laje, e quando falta proteção o serviço para. A ATR confirmou em 13/11: pela política da empresa, enquanto a linha de vida não está 100% montada ninguém sobe, e isso já parou a produção em lajes passadas. A equipe de segurança é enxuta (duas pessoas, a confirmar) para muitas frentes ao mesmo tempo. A ordem assoalho antes de vigas nasceu desse conflito.'},
-{t:'Material',tags:['relato','conf'],p:'Três episódios pontuais: telas soldadas atrasaram um dia no 3º pavimento (fornecedor já trocado); escoras pedidas na segunda chegaram na quarta no 5º; de duas bitolas de mangueira elétrica, uma não chegou e ninguém conferiu. Aço e cabos não foram citados como problema.'},
+{t:'Segurança e produção',tags:['relato'],p:'A linha de vida precisa estar pronta antes de subir na laje, e quando falta proteção o serviço para. A ATR confirmou em 13/11: pela política da empresa, enquanto a linha de vida não está 100% montada ninguém sobe, e isso já parou a produção em lajes passadas. A equipe de segurança é enxuta (duas pessoas, a confirmar) para muitas frentes ao mesmo tempo. A ordem assoalho antes de vigas nasceu desse conflito. Em 10/11 houve dois quase acidentes no deck, atribuídos a muitos serviços no mesmo dia, e em 17/11 o assistente de segurança disse cuidar sozinho da parte de documentos de cinco obras.'},
+{t:'Material',tags:['relato','conf'],p:'Em 03/11, três episódios pontuais: telas soldadas atrasaram um dia no 3º pavimento (fornecedor já trocado); escoras pedidas na segunda chegaram na quarta no 5º; de duas bitolas de mangueira elétrica, uma não chegou e ninguém conferiu. Em 17/11 o almoxarife confirmou atrasos de telas, escoras e aço, de cerca de um dia cada, e a troca do fornecedor de tela. No 6º faltaram peças de aço de dois formatos, com quase um dia de atraso. O fornecedor costuma ser escolhido pelo preço, e os feixes de aço chegam com etiquetas no meio, o que dificulta a conferência.'},
+{t:'Aprovação de compras',tags:['relato','conf'],p:'Em 17/11 o engenheiro explicou que um pedido passa por cinco ou seis setores de aprovação, e que há cerca de três meses o orçamento questiona quantidade, aplicação e verba, com as perguntas voltando para a obra. Um item único levaria cerca de um mês entre a solicitação (20/10) e o envio ao fornecedor, no melhor caso. É relato, sem dias medidos, e ele frisou que não busca culpados. Ver Processos de apoio.'},
+{t:'Liberação de pessoal',tags:['relato','conf'],p:'O assistente de segurança valida os documentos das empreiteiras de cinco obras no portal. O painel mostrava média de 13 horas para liberar um colaborador, e muitas empreiteiras só aparecem quando o funcionário já foi barrado na entrada. Ainda não se sabe se isso atrasa a entrada de gente nova na estrutura.'},
 {t:'Chuva e clima',tags:['relato'],p:'Atrapalha muito. Com pouca chuva trabalham de capa; com muita, não dá, conforme a etapa da laje. Em 04/11, com uma chuva forte de uns 15 minutos e a temperatura do dia, a concretagem terminou por volta das 22h e o concreto não estava firme na quinta para pisar; nas outras lajes, que também acabaram tarde, isso quase não ocorreu. Quem autoriza seguir ou parar é o engenheiro, que consulta o laboratório quando a situação é fora do comum.'},
 {t:'Retrabalho',tags:['relato'],p:'Considerado baixo: o mestre geral corrige a armadura antes de concretar e não houve concretagem refeita por erro. Bicheira em pilar é rara e não afeta o prazo.'},
 {t:'Controle por etapa',tags:['leitura','conf'],p:'Na visita, ao perguntar qual etapa específica atrasou, a resposta não apontou uma etapa. Hipótese da EngePro: o atraso ainda não é medido por etapa, o que só as datas reais de cada atividade vão confirmar.'}
@@ -920,7 +1013,12 @@ var GL=[
 ['Pé-direito','Altura livre entre o piso e o teto. Na Atmos, 2,70 m (baixo) e cerca de 4 m (alto).'],
 ['Dia útil','Dia de trabalho no calendário do médio prazo: segunda a sexta, sem feriado nem férias coletivas. O plano semanal também usa o sábado.'],
 ['Plano semanal','Planejamento de curto prazo da semana, feito na sexta, com atividade por equipe e por dia.'],
-['BPMN','Notação para desenhar processos em fluxo. A EngePro vai usá-la para mapear o ciclo.']
+['BPMN','Notação para desenhar processos em fluxo. A EngePro vai usá-la para mapear o ciclo.'],
+['Almoxarife','Responsável pelo almoxarifado: recebe e guarda material e ferramentas, confere a entrega e atende as equipes.'],
+['Alçada','Nível de aprovação de uma compra. Cada alçada é uma pessoa ou um setor que precisa aprovar antes de o pedido seguir.'],
+['Pipefy','Ferramenta de quadros e cartões, parecida com um Trello, que a ATR usa para os pedidos de suprimentos de todas as obras.'],
+['ASO e PCMSO','O ASO é o atestado de saúde ocupacional de cada trabalhador. O PCMSO é o programa médico da empresa, que diz quais exames cada função exige.'],
+['Catraca','Controle de entrada da obra. A ATR está integrando o portal de documentos de segurança a ela, para barrar quem está com documento vencido.']
 ];
 
 var GANTT=[
@@ -1128,11 +1226,13 @@ var PRESETS=[
  {nome:'Plano do 6º (pé-direito baixo)',fp:2,dk:4,ar:5,pa:0,meta:12},
  {nome:'Plano com pé-direito alto',fp:3,dk:6,ar:5,pa:0,meta:15},
  {nome:'Armação em 6 dias (relato)',fp:2,dk:4,ar:6,pa:0,meta:12},
- {nome:'Plano com 3 dias de chuva',fp:2,dk:4,ar:5,pa:3,meta:12}
+ {nome:'Plano com 3 dias de chuva',fp:2,dk:4,ar:5,pa:3,meta:12},
+ {nome:'Pilares em 06/11, sem trabalhar em 20/11 (conta de 13/11)',ini:'2026-11-06',fp:2,dk:4,ar:5,pa:0,meta:12,wh:false},
+ {nome:'Pilares em 06/11, trabalhando em 20/11 (relato de 17/11)',ini:'2026-11-06',fp:2,dk:4,ar:5,pa:0,meta:12,wh:true}
 ];
 var clamp=function(v,a,b){v=Math.round(Number(v));if(isNaN(v))v=a;return Math.min(b,Math.max(a,v))};
 function readInputs(){
-  return {ini:$('#in-ini').value||'2026-11-05',fp:clamp($('#in-fp').value,1,15),dk:clamp($('#in-dk').value,1,20),ar:clamp($('#in-ar').value,1,20),pa:clamp($('#in-pa').value,0,20),sab:$('#in-sab').checked,meta:+$('#in-meta').value};
+  return {ini:$('#in-ini').value||'2026-11-05',fp:clamp($('#in-fp').value,1,15),dk:clamp($('#in-dk').value,1,20),ar:clamp($('#in-ar').value,1,20),pa:clamp($('#in-pa').value,0,20),sab:$('#in-sab').checked,wh:$('#in-fer').checked,meta:+$('#in-meta').value};
 }
 function runSim(){
   var p=readInputs(),r=simulate(p);
@@ -1161,7 +1261,7 @@ function runSim(){
   }).join('');
   $$('.preset').forEach(function(b){
     var q=PRESETS[+b.dataset.i];
-    b.classList.toggle('on',q.fp===p.fp&&q.dk===p.dk&&q.ar===p.ar&&q.pa===p.pa&&q.meta===p.meta&&$('#in-ini').value==='2026-11-05'&&!p.sab);
+    b.classList.toggle('on',q.fp===p.fp&&q.dk===p.dk&&q.ar===p.ar&&q.pa===p.pa&&q.meta===p.meta&&$('#in-ini').value===(q.ini||'2026-11-05')&&!p.sab&&!!q.wh===p.wh);
   });
 }
 function wireSim(){
@@ -1169,9 +1269,9 @@ function wireSim(){
   $('#presets').addEventListener('click',function(e){
     var b=e.target.closest('.preset');if(!b)return;
     var q=PRESETS[+b.dataset.i];
-    $('#in-ini').value='2026-11-05';$('#in-fp').value=q.fp;$('#in-dk').value=q.dk;$('#in-ar').value=q.ar;$('#in-pa').value=q.pa;$('#in-meta').value=String(q.meta);$('#in-sab').checked=false;runSim();
+    $('#in-ini').value=q.ini||'2026-11-05';$('#in-fer').checked=!!q.wh;$('#in-fp').value=q.fp;$('#in-dk').value=q.dk;$('#in-ar').value=q.ar;$('#in-pa').value=q.pa;$('#in-meta').value=String(q.meta);$('#in-sab').checked=false;runSim();
   });
-  ['#in-ini','#in-fp','#in-dk','#in-ar','#in-pa','#in-meta','#in-sab'].forEach(function(id){
+  ['#in-ini','#in-fp','#in-dk','#in-ar','#in-pa','#in-meta','#in-sab','#in-fer'].forEach(function(id){
     $(id).addEventListener('input',runSim);$(id).addEventListener('change',runSim);
   });
   runSim();
