@@ -351,6 +351,17 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .flow li::before{content:counter(f);width:22px;height:22px;border-radius:50%;background:var(--navy-800);color:var(--yellow);display:grid;place-items:center;font-size:11px;font-weight:700;margin-top:1px}
 .sup-risk{padding:12px 14px;border-radius:var(--r-md);background:var(--sky-50);border:1px solid var(--line);font-size:13px;color:var(--ink-soft);line-height:1.65}
 
+.bpmn-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.bpmn-bar .grow{flex:1 1 auto}
+.bpmn-bar .btn{min-height:36px;padding:0 14px}
+.bpmn-bar .btn[aria-pressed="true"]{background:var(--navy-800);color:#fff;border-color:var(--navy-800)}
+.bpmn-view{overflow:auto;max-height:72vh;border:1px solid var(--line);border-radius:var(--r-md);background:#fff;-webkit-overflow-scrolling:touch}
+.bpmn-view:focus-visible{outline:3px solid var(--sky-400);outline-offset:2px}
+.bpmn-view img{display:block;height:auto;max-width:none;width:100%}
+.bpmn-read{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.bpmn-read .card h3{margin:0 0 10px;font-size:14px;color:var(--navy-800)}
+.bpmn-lanes{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.bpmn-lanes li{font-size:12px;font-weight:600;color:var(--navy-800);background:var(--sky-100);border:1px solid var(--line);border-radius:20px;padding:4px 10px}
 /* ===== celular e telas médias ===== */
 @media (max-width:1100px){
   .cycle,.facts{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -376,7 +387,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
   .model{position:static}
 }
 @media (max-width:680px){
-  .cycle,.facts,.teams,.att-grid,.chain,.sup-grid,.gl,.dl{grid-template-columns:minmax(0,1fr)}
+  .cycle,.facts,.teams,.att-grid,.chain,.sup-grid,.bpmn-read,.gl,.dl{grid-template-columns:minmax(0,1fr)}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .res-main{grid-template-columns:repeat(2,minmax(0,1fr))}
   .f-row{grid-template-columns:48px minmax(0,1fr)}
@@ -411,18 +422,19 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 <button type="button" class="nav-item" data-target="topo" data-label="Resumo"><span class="num">1</span><span class="txt">Resumo</span></button>
 <button type="button" class="nav-item" data-target="ciclo" data-label="As 8 etapas"><span class="num">2</span><span class="txt">As 8 etapas</span><span class="count">8</span></button>
 <button type="button" class="nav-item" data-target="etapas" data-label="Etapa por etapa"><span class="num">3</span><span class="txt">Etapa por etapa</span></button>
+<button type="button" class="nav-item" data-target="bpmn" data-label="Fluxo BPMN do ciclo"><span class="num">4</span><span class="txt">Fluxo BPMN</span><span class="count">8 equipes</span></button>
 <div class="nav-group">Planejamento</div>
-<button type="button" class="nav-item" data-target="cronograma" data-label="Cronograma do 6º pavimento"><span class="num">4</span><span class="txt">Cronograma do 6º</span></button>
-<button type="button" class="nav-item" data-target="simulador" data-label="Simulador de prazo"><span class="num">5</span><span class="txt">Simulador de prazo</span></button>
-<button type="button" class="nav-item" data-target="equipes" data-label="Equipes do ciclo"><span class="num">6</span><span class="txt">Equipes</span><span class="count">12</span></button>
-<button type="button" class="nav-item" data-target="apoio" data-label="Processos de apoio"><span class="num">7</span><span class="txt">Processos de apoio</span><span class="count">3</span></button>
+<button type="button" class="nav-item" data-target="cronograma" data-label="Cronograma do 6º pavimento"><span class="num">5</span><span class="txt">Cronograma do 6º</span></button>
+<button type="button" class="nav-item" data-target="simulador" data-label="Simulador de prazo"><span class="num">6</span><span class="txt">Simulador de prazo</span></button>
+<button type="button" class="nav-item" data-target="equipes" data-label="Equipes do ciclo"><span class="num">7</span><span class="txt">Equipes</span><span class="count">12</span></button>
+<button type="button" class="nav-item" data-target="apoio" data-label="Processos de apoio"><span class="num">8</span><span class="txt">Processos de apoio</span><span class="count">3</span></button>
 <div class="nav-group">Análise</div>
-<button type="button" class="nav-item" data-target="atencao" data-label="Pontos de atenção"><span class="num">8</span><span class="txt">Pontos de atenção</span></button>
-<button type="button" class="nav-item" data-target="dados" data-label="Números e dados"><span class="num">9</span><span class="txt">Números e dados</span></button>
-<button type="button" class="nav-item" data-target="proximos" data-label="Pendências e próximos passos"><span class="num">10</span><span class="txt">Próximos passos</span></button>
+<button type="button" class="nav-item" data-target="atencao" data-label="Pontos de atenção"><span class="num">9</span><span class="txt">Pontos de atenção</span></button>
+<button type="button" class="nav-item" data-target="dados" data-label="Números e dados"><span class="num">10</span><span class="txt">Números e dados</span></button>
+<button type="button" class="nav-item" data-target="proximos" data-label="Pendências e próximos passos"><span class="num">11</span><span class="txt">Próximos passos</span></button>
 <div class="nav-group">Referência</div>
-<button type="button" class="nav-item" data-target="glossario" data-label="Glossário"><span class="num">11</span><span class="txt">Glossário</span></button>
-<button type="button" class="nav-item" data-target="fontes" data-label="Fontes"><span class="num">12</span><span class="txt">Fontes</span></button>
+<button type="button" class="nav-item" data-target="glossario" data-label="Glossário"><span class="num">12</span><span class="txt">Glossário</span></button>
+<button type="button" class="nav-item" data-target="fontes" data-label="Fontes"><span class="num">13</span><span class="txt">Fontes</span></button>
 
   <div class="nav-foot"><div class="foot-row">
     <img class="foot-logo-img" src="data:image/webp;base64,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" alt="EngePro">
@@ -446,7 +458,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
       <a class="btn btn-y" href="#etapas">Ver as etapas</a>
       <a class="btn btn-o" href="#simulador">Simular o prazo</a>
     </div>
-    <p class="hero-meta">Baseado nas visitas de 03, 10 e 17/11/2026, na reunião de 13/11, no médio prazo e no plano semanal S64. Atualizado em 22/11/2026 com o que a ATR contou na visita de 17/11.</p>
+    <p class="hero-meta">Baseado nas visitas de 03, 10 e 17/11/2026, na reunião de 13/11, no médio prazo e no plano semanal S64. Atualizado em 23/11/2026 com o fluxo BPMN do ciclo e o que a ATR contou na visita de 17/11.</p>
   </div>
   <div class="tiles" aria-label="Números do ciclo">
     <div class="tile"><b>12</b><span>dias úteis para concretar a laje, com pé-direito baixo</span><em>Meta da obra (dias trabalhados, não corridos)</em></div><div class="tile"><b>15</b><span>dias úteis para concretar a laje, com pé-direito alto</span><em>Meta da obra (dias trabalhados, não corridos)</em></div><div class="tile"><b>~30</b><span>dias corridos por laje com a empreiteira anterior, segundo o engenheiro</span><em>Relato de 13/11, a confirmar</em></div><div class="tile"><b>6º</b><span>pavimento: os pilares começaram em 06/11 (o plano era 05/11) e a concretagem segue marcada para 23/11, com trabalho no feriado de 20/11</span><em>Plano e relatos de 13 e 17/11</em></div>
@@ -499,6 +511,51 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
         </figcaption>
       </figure>
       <article class="card detail" id="detail" aria-live="polite"></article>
+    </div>
+  </section>
+
+<section class="sec" id="bpmn">
+    <div class="sec-head">
+      <p class="eyebrow">Fluxo BPMN</p>
+      <h2>O ciclo desenhado como fluxo (AS-IS)</h2>
+      <p>As mesmas 8 etapas, agora mostrando quem faz o quê e o que precisa terminar antes do passo seguinte. Cada faixa é uma equipe. O desenho retrata como o ciclo roda hoje na obra, com as correções de 13/11 e o que a ATR contou em 10 e 17/11. Ainda precisa ser validado com a ATR.</p>
+    </div>
+    <div class="card">
+      <div class="bpmn-bar" role="group" aria-label="Tamanho do desenho">
+        <button type="button" class="btn btn-o" data-zoom="fit" aria-pressed="true">Ajustar à largura</button>
+        <button type="button" class="btn btn-o" data-zoom="mid" aria-pressed="false">Ampliar</button>
+        <button type="button" class="btn btn-o" data-zoom="real" aria-pressed="false">Ler os textos</button>
+        <span class="grow"></span>
+        <a class="btn btn-y" href="bpmn-as-is.jpg" target="_blank" rel="noopener">Abrir em tela cheia</a>
+      </div>
+      <div class="bpmn-view" id="bpmn-view" tabindex="0" role="region" aria-label="Fluxo BPMN do ciclo entre pavimentos. Role para os lados e para baixo para ver o desenho todo.">
+        <img id="bpmn-img" src="bpmn-as-is.jpg" width="8000" height="2431" alt="Fluxo BPMN AS-IS do ciclo entre pavimentos da obra Atmos, com 8 faixas de equipes, da laje N concretada até a laje N+1 concretada" loading="lazy" decoding="async">
+      </div>
+      <p class="note" style="margin-top:10px">Desenho feito no Bizagi Modeler. No celular, use "Ampliar" e arraste o desenho com o dedo, ou abra em tela cheia. Para ler o texto de cada caixa, use "Ler os textos". Os quadros cinza com ⚠ trazem o que foi dito nas visitas e reuniões e ainda não foi confirmado.</p>
+    </div>
+    <div class="bpmn-read">
+      <div class="card">
+        <h3>Quem aparece no desenho</h3>
+        <ul class="bpmn-lanes">
+          <li>Engenharia ATR / Mestre geral</li>
+          <li>Equipe própria ATR (segurança, almoxarifado)</li>
+          <li>Seltasul: topografia</li>
+          <li>Ajax: carpintaria</li>
+          <li>Ajax: armação</li>
+          <li>JPM / Elioto: instalações</li>
+          <li>Evehx: protensão</li>
+          <li>CDTEC: laboratório</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Como ler</h3>
+        <ul class="bullets">
+          <li><span>O fluxo começa em "Laje N concretada" (círculo verde) e termina em "Laje N+1 concretada" (círculo vermelho).</span></li>
+          <li><span>Losango com "+" quer dizer que os caminhos acontecem ao mesmo tempo, e o passo seguinte só começa quando todos chegam. Losango vazio é uma pergunta (sim ou não) ou um ponto onde dois caminhos se juntam.</span></li>
+          <li><span>Linhas tracejadas são a conversa com quem está fora da obra: pedido, entrega, reclamação ou reposição, programação do concreto e chegada dos caminhões.</span></li>
+          <li><span>Quadros cinza com ⚠ marcam os gargalos e dúvidas vindos dos relatos: material com atraso pontual, linha de vida, deck, arremates e forma das vigas, armação da laje e chuva.</span></li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -736,7 +793,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
     <div class="sec-head">
       <p class="eyebrow">Pendências e próximos passos</p>
       <h2>O que ainda falta confirmar</h2>
-      <p>A transcrição da visita é automática e o áudio foi gravado dentro de um canteiro de obras. O que está nesta lista precisa ser confirmado antes de entrar no mapa em BPMN.</p>
+      <p>A transcrição da visita é automática e o áudio foi gravado dentro de um canteiro de obras. O que está nesta lista precisa ser confirmado antes de entrar no mapa em BPMN. A primeira versão do desenho já está na seção Fluxo BPMN.</p>
     </div>
     <div class="card" style="margin-bottom:20px">
       <h3>Ajustado nesta versão, a partir da visita de 17/11</h3>
@@ -781,7 +838,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
           <li><span>Remarcar a visita para ver a chegada do aço dos pilares da próxima laje e os armadores na laje. A de 17/11 foi só de entrevistas: a equipe saiu sem subir e disse que volta outro dia.</span></li>
           <li><span>Pedir o plano semanal S65 e conferir se a lista de contatos prometida em 30/10 chegou.</span></li>
           <li><span>Decidir se haverá visita extra: uma visita por semana perde muitos dados, porque várias atividades correm juntas.</span></li>
-          <li><span>Montar o fluxo em BPMN a partir das 8 etapas, já com as correções de 13/11 e com os três processos de apoio. Na reunião de 13/11, o modelo final ficou para a semana seguinte ou a posterior (até cerca de 27/11).</span></li>
+          <li><span>Validar com a ATR o fluxo BPMN do ciclo, que já tem a primeira versão (seção Fluxo BPMN), e incluir nele os três processos de apoio. Na reunião de 13/11, o modelo final ficou para a semana seguinte ou a posterior (até cerca de 27/11).</span></li>
           <li><span>Conferir com a ATR se há comentários sobre este mapa, que tinham prazo em 17/11 e não aparecem na gravação da visita, com destaque para onde a segurança trava a produção. Pode ser por áudio.</span></li>
           <li><span>Registrar a data real de cada concretagem a partir do 5º pavimento e comparar com o médio prazo e com o "um mês" relatado.</span></li>
           <li><span>Completar as entrevistas. Em 17/11 foram ouvidos o almoxarife e o assistente de segurança, mas só em parte: faltam as perguntas de campo da segurança (inspeção, linha de vida, EPI, quase acidentes) e as do almoxarife (mangueiras, material alugado, consumíveis, EPI). Pode ser online.</span></li>
@@ -818,6 +875,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
         <li>Reunião ATR × EngePro de 13/11/2026 (41 min), gravada, para as correções do mapa e o andamento do 6º pavimento.</li>
         <li>Visita e entrevistas de 10/11/2026 (1h12), gravadas, para a causa central do atraso e os quase acidentes.</li>
         <li>Visita e entrevistas na ATR de 17/11/2026 (52 min), gravadas, para compras, recebimento do aço, liberação de pessoal e a conta dos dias do 6º pavimento.</li>
+        <li>Fluxo BPMN AS-IS do ciclo (Bizagi Modeler), feito pela EngePro com base nas visitas e reuniões acima, incluído em 23/11/2026.</li>
       </ul>
     </div>
     <div>
@@ -826,7 +884,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
         <li><a href="https://claude.ai/artifact/PrVJxgYJPisQ79pHsdQtRv">Relatório completo da 1ª visita</a></li>
         <li><a href="https://claude.ai/artifact/PckivebVYgPWK8yt6KUeVD">Guia de capacitação da equipe: vídeos e sites</a></li>
       </ul>
-      <p class="note" style="margin-top:22px">EngePro Consultoria · Projeto ATR · 22/11/2026</p>
+      <p class="note" style="margin-top:22px">EngePro Consultoria · Projeto ATR · 23/11/2026</p>
     </div>
   </div>
 </section>
@@ -1013,7 +1071,8 @@ var GL=[
 ['Pé-direito','Altura livre entre o piso e o teto. Na Atmos, 2,70 m (baixo) e cerca de 4 m (alto).'],
 ['Dia útil','Dia de trabalho no calendário do médio prazo: segunda a sexta, sem feriado nem férias coletivas. O plano semanal também usa o sábado.'],
 ['Plano semanal','Planejamento de curto prazo da semana, feito na sexta, com atividade por equipe e por dia.'],
-['BPMN','Notação para desenhar processos em fluxo. A EngePro vai usá-la para mapear o ciclo.'],
+['BPMN','Notação para desenhar processos em fluxo, com faixas por equipe. A EngePro usou-a para desenhar o ciclo; veja a seção Fluxo BPMN.'],
+['AS-IS','Como o processo roda hoje, antes de qualquer melhoria. O fluxo BPMN desta página é um AS-IS.'],
 ['Almoxarife','Responsável pelo almoxarifado: recebe e guarda material e ferramentas, confere a entrega e atende as equipes.'],
 ['Alçada','Nível de aprovação de uma compra. Cada alçada é uma pessoa ou um setor que precisa aprovar antes de o pedido seguir.'],
 ['Pipefy','Ferramenta de quadros e cartões, parecida com um Trello, que a ATR usa para os pedidos de suprimentos de todas as obras.'],
@@ -1335,6 +1394,20 @@ function spy(){
 }
 scroller.addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(spy)}});
 spy();
+})();
+
+(function(){
+var view=document.getElementById('bpmn-view'),img=document.getElementById('bpmn-img');
+if(!view||!img)return;
+var btns=Array.prototype.slice.call(document.querySelectorAll('[data-zoom]'));
+function set(z){
+  btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.zoom===z?'true':'false')});
+  if(z==='fit'){img.style.width='100%';view.scrollLeft=0;return}
+  var base=view.clientWidth||800;
+  /* "Ampliar" = 3× a largura da área visível; "Ler os textos" = 4800 px, onde o texto das caixas fica legível */
+  img.style.width=(z==='real'?4800:Math.min(8000,Math.round(base*3)))+'px';
+}
+btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.zoom)})});
 })();
 </script>
 </body>
