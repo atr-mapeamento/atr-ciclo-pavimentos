@@ -220,6 +220,7 @@ button.chip:hover{border-color:var(--steel-600);color:var(--royal-700);backgroun
 .g-legend i{width:18px;height:12px;border-radius:4px;display:inline-block}
 .g-cap{margin-top:12px;min-height:46px;padding:11px 16px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--steel-600);font-size:13px;color:var(--ink-soft)}
 .chain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px}
+.chain.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .chain .card{display:flex;flex-direction:column;gap:8px}
 .chain b{font-family:var(--display);font-weight:400;font-size:22px;color:var(--royal-700);line-height:1.2}
 .chain h3{font-size:14px;font-weight:700}
@@ -388,6 +389,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
   .teams,.att-grid,.chain,.sup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .bpmn-picker{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chain.two{grid-template-columns:minmax(0,1fr)}
   .bpmn-opt.wide .th{aspect-ratio:3/1}
 }
 @media (max-width:980px){
@@ -599,16 +601,14 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
       <div class="gantt" id="gantt"></div>
     </div>
     <div class="g-legend">
-      <span><i style="background:var(--indigo)"></i>Ajax (formas, armação, reescoramento)</span>
+      <span><i style="background:var(--indigo)"></i>Ajax (formas e armação)</span>
       <span><i style="background:var(--navy)"></i>Concretagem (Ajax)</span>
       <span><i style="background:var(--teal)"></i>Elioto e JPM (passagens e infras)</span>
-      <span><i style="background:var(--yellow);box-shadow:inset 0 0 0 2px var(--navy-800)"></i>Evehx (protensão)</span>
     </div>
     <p class="g-cap" id="g-cap" aria-live="polite">Toque numa barra para ver equipe, datas e duração.</p>
-    <div class="chain">
+    <div class="chain two">
       <div class="card"><b>12 dias úteis</b><h3>O que define o prazo</h3><p>Forma de pilares (2) + deck (4) + armação e cabos (5) + concretagem (1). Se qualquer uma dessas etapas atrasar um dia, a concretagem atrasa um dia.</p></div>
       <div class="card"><b>Ao mesmo tempo</b><h3>O que anda junto</h3><p>A forma da viga de borda é feita junto com o deck, a armação dos pilares começa com a forma, e as passagens e infras entram no último dia do deck e vão até o fim da armação.</p></div>
-      <div class="card"><b>26/11 e 27/11</b><h3>Depois da concretagem</h3><p>A protensão é três dias úteis depois da concretagem, e o reescoramento e a limpeza no dia seguinte. A forma dos pilares do 7º pavimento já começa em 24/11.</p></div>
     </div>
     <p class="insight"><span class="tag relato">Relato de 13/11</span><br><br>O engenheiro contou como está o 6º pavimento: <b>os pilares começaram em 06/11</b> (e não em 05/11) porque o concreto de 04/11 ainda não estava firme na quinta; <b>a forma das vigas e os arremates estão atrasados</b> e seguram o posicionamento das vigas já armadas; e <b>a malha da laje entra em 16/11</b>, não em 13/11. A concretagem continua marcada para <b>23/11</b>. Para ver o efeito de começar um dia depois, coloque 06/11 como início no simulador: pela conta, a concretagem vai para 24/11.<br><br><span class="tag relato">Relato de 17/11</span> <span class="tag conf">A confirmar</span><br><br>No papel, 23/11 é o 12º dia de trabalho. Na prática será o 13º, porque a empreiteira vai trabalhar na sexta, 20/11, feriado em que a obra normalmente não trabalharia. Contando de 05/11, o início do plano, 23/11 é o 13º dia com o trabalho de 20/11. No simulador, com início em 06/11, marque "Trabalhar no feriado de 20/11" e a concretagem fica em <b>23/11</b>; sem marcar, vai para <b>24/11</b>. O trecho do áudio é curto, então vale confirmar com o engenheiro.</p>
     <p class="note" style="margin-top:16px">Calendário do médio prazo: 20/11 (Consciência Negra) não tem trabalho e as férias coletivas vão de 19/12 a 3/01. O plano semanal S64 antecipa em um dia a armação dos pilares do 6º (04/11) e marca a montagem das formas dos pilares para 06 e 07/11. Mesmo assim cabe antes do deck, porque o plano semanal conta o sábado.</p>
@@ -1088,9 +1088,7 @@ var GANTT=[
 {nome:'Forma da viga de borda',eq:'Ajax',ini:'2026-11-09',fim:'2026-11-10',du:2,cls:'ajax'},
 {nome:'Passagens e infras',eq:'Elioto e JPM',ini:'2026-11-12',fim:'2026-11-19',du:6,cls:'infra',nota:'Entram no último dia do deck e terminam junto com a armação.'},
 {nome:'Armação e cabos da laje',eq:'Ajax',ini:'2026-11-13',fim:'2026-11-19',du:5,cls:'ajax',nota:'Relato de 6 dias na última laje, contra 5 no plano.'},
-{nome:'Concretagem',eq:'Ajax',ini:'2026-11-23',fim:'2026-11-23',du:1,cls:'conc',nota:'12º dia útil do ciclo, depois do feriado de 20/11.'},
-{nome:'Protensão',eq:'Evehx',ini:'2026-11-26',fim:'2026-11-26',du:1,cls:'prot',nota:'Três dias úteis depois da concretagem.'},
-{nome:'Reescoramento e limpeza',eq:'Ajax',ini:'2026-11-27',fim:'2026-11-27',du:1,cls:'ajax'}
+{nome:'Concretagem',eq:'Ajax',ini:'2026-11-23',fim:'2026-11-23',du:1,cls:'conc',nota:'12º dia útil do ciclo, depois do feriado de 20/11.'}
 ];
 
 var FLOORS=[
@@ -1250,7 +1248,7 @@ function wireGuide(){
 
 /* ---------- cronograma (Gantt) ---------- */
 function buildGantt(){
-  var start=parseISO('2026-11-05'),end=parseISO('2026-11-27'),N=diffDays(start,end)+1;
+  var start=parseISO('2026-11-05'),end=parseISO('2026-11-23'),N=diffDays(start,end)+1;
   var days=[];for(var i=0;i<N;i++)days.push(addDays(start,i));
   var today=iso(new Date());
   var cls=function(d){var c=[];var w=d.getDay();if(w===0||w===6)c.push('we');if(isHol(d))c.push('hol');if(iso(d)===today)c.push('hoje');return c.join(' ')};
