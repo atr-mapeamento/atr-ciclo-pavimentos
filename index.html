@@ -362,18 +362,19 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .bpmn-read .card h3{margin:0 0 10px;font-size:14px;color:var(--navy-800)}
 .bpmn-lanes{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
 .bpmn-lanes li{font-size:12px;font-weight:600;color:var(--navy-800);background:var(--sky-100);border:1px solid var(--line);border-radius:20px;padding:4px 10px}
-.bpmn-modes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.bpmn-mode{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;min-height:48px;padding:6px 18px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line-strong);font-size:14px;font-weight:700;color:var(--navy-800);text-align:left;transition:background-color .13s,border-color .13s}
-.bpmn-mode small{font-size:11px;font-weight:500;color:var(--muted)}
-.bpmn-mode:hover{border-color:var(--steel-600);background:var(--sky-100)}
-.bpmn-mode[aria-selected="true"]{background:var(--navy-800);border-color:var(--navy-800);color:#fff}
-.bpmn-mode[aria-selected="true"] small{color:#C6D7F0}
-.bpmn-stages{display:flex;flex-wrap:wrap;gap:7px;padding:10px 12px;margin-bottom:12px;background:var(--sky-50);border:1px solid var(--line);border-radius:var(--r-md)}
-.bpmn-stage{display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 5px;border-radius:20px;background:var(--surface);border:1px solid var(--line-strong);font-size:12px;font-weight:600;color:var(--ink-soft);white-space:nowrap;transition:background-color .13s,border-color .13s,color .13s}
-.bpmn-stage .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--sky-100);color:var(--navy-800);font-size:11.5px;font-weight:700}
-.bpmn-stage:hover{border-color:var(--steel-600);color:var(--royal-700)}
-.bpmn-stage[aria-selected="true"]{background:var(--navy-800);border-color:var(--navy-800);color:#fff}
-.bpmn-stage[aria-selected="true"] .n{background:var(--yellow);color:var(--navy-950)}
+.bpmn-picker-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.bpmn-picker{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.bpmn-opt{display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden;text-align:left;border-radius:var(--r-md);background:var(--surface);border:2px solid var(--line-strong);transition:border-color .13s,box-shadow .13s,transform .13s}
+.bpmn-opt.wide{grid-column:1/-1}
+.bpmn-opt.wide .th{aspect-ratio:4.2/1}
+.bpmn-opt:hover{border-color:var(--steel-600);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.bpmn-opt .th{display:block;aspect-ratio:3/2;background:#fff;border-bottom:1px solid var(--line);overflow:hidden}
+.bpmn-opt .th img{display:block;width:100%;height:100%;object-fit:contain}
+.bpmn-opt .lb{display:flex;align-items:center;gap:8px;padding:8px 10px;flex:1 1 auto;min-height:52px;font-size:12.5px;font-weight:600;line-height:1.3;color:var(--navy-800)}
+.bpmn-opt .n{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;padding:0 6px;border-radius:12px;background:var(--sky-100);color:var(--navy-800);font-size:11.5px;font-weight:700}
+.bpmn-opt[aria-selected="true"]{border-color:var(--navy-800);box-shadow:0 0 0 3px var(--sky-200)}
+.bpmn-opt[aria-selected="true"] .lb{background:var(--navy-800);color:#fff}
+.bpmn-opt[aria-selected="true"] .n{background:var(--yellow);color:var(--navy-950)}
 .bpmn-head{margin-bottom:12px}
 .bpmn-head h3{margin:0 0 4px;font-size:15px;color:var(--navy-800)}
 .bpmn-head p{font-size:13px;color:var(--ink-soft);line-height:1.6;max-width:90ch}
@@ -386,7 +387,8 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
   .cycle,.facts{grid-template-columns:repeat(2,minmax(0,1fr))}
   .teams,.att-grid,.chain,.sup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bpmn-mode{flex:1 1 140px}
+  .bpmn-picker{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bpmn-opt.wide .th{aspect-ratio:3/1}
 }
 @media (max-width:980px){
   .app{grid-template-columns:minmax(0,1fr);grid-template-rows:64px minmax(0,1fr);grid-template-areas:'header' 'main'}
@@ -537,14 +539,11 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
     <div class="sec-head">
       <p class="eyebrow">Fluxo BPMN</p>
       <h2>O ciclo desenhado como fluxo (AS-IS)</h2>
-      <p>As mesmas 8 etapas, agora mostrando quem faz o quê e o que precisa terminar antes do passo seguinte. Cada faixa é uma equipe. Veja o macroprocesso inteiro de uma vez ou escolha uma etapa para ler o desenho dela em tamanho maior. O desenho retrata como o ciclo roda hoje na obra, com as correções de 13/11 e o que a ATR contou em 10 e 17/11. Ainda precisa ser validado com a ATR.</p>
+      <p>As mesmas 8 etapas, agora mostrando quem faz o quê e o que precisa terminar antes do passo seguinte. Cada faixa é uma equipe. Escolha abaixo o fluxo que quer ver: o macroprocesso inteiro ou o desenho de uma etapa, em tamanho maior. O desenho retrata como o ciclo roda hoje na obra, com as correções de 13/11 e o que a ATR contou em 10 e 17/11. Ainda precisa ser validado com a ATR.</p>
     </div>
     <div class="card" id="bpmn-card">
-      <div class="bpmn-modes" role="tablist" aria-label="O que ver do fluxo">
-        <button type="button" class="bpmn-mode" role="tab" id="bm-macro" data-mode="macro" aria-selected="true" aria-controls="bpmn-panel"><span>Macroprocesso</span><small>o ciclo inteiro em um desenho</small></button>
-        <button type="button" class="bpmn-mode" role="tab" id="bm-etapas" data-mode="etapas" aria-selected="false" aria-controls="bpmn-panel"><span>Etapas</span><small>8 desenhos, um por etapa</small></button>
-      </div>
-      <div class="bpmn-stages" id="bpmn-stages" role="tablist" aria-label="Etapas do ciclo" hidden></div>
+      <p class="bpmn-picker-label" id="bpmn-picker-label">Escolha o fluxo que quer ver</p>
+      <div class="bpmn-picker" id="bpmn-picker" role="tablist" aria-labelledby="bpmn-picker-label"></div>
       <div class="bpmn-head" id="bpmn-panel" role="tabpanel" aria-live="polite">
         <h3 id="bpmn-title"></h3>
         <p id="bpmn-desc"></p>
@@ -555,8 +554,8 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
         <button type="button" class="btn btn-o" data-zoom="mid" aria-pressed="false">Ampliar</button>
         <button type="button" class="btn btn-o" data-zoom="real" aria-pressed="false">Ler os textos</button>
         <span class="grow"></span>
-        <button type="button" class="btn btn-o" id="bpmn-prev" hidden>&larr; Etapa anterior</button>
-        <button type="button" class="btn btn-o" id="bpmn-next" hidden>Próxima etapa &rarr;</button>
+        <button type="button" class="btn btn-o" id="bpmn-prev">&larr; Anterior</button>
+        <button type="button" class="btn btn-o" id="bpmn-next">Próximo &rarr;</button>
         <a class="btn btn-y" id="bpmn-open" href="bpmn/macroprocesso.png" target="_blank" rel="noopener">Abrir em tela cheia</a>
       </div>
       <div class="bpmn-view" id="bpmn-view" tabindex="0" role="region" aria-label="Desenho do fluxo BPMN. Role para os lados e para baixo para ver o desenho todo.">
@@ -1405,7 +1404,7 @@ var NOTE_MACRO='Desenho feito no Bizagi Modeler. Cada retângulo tracejado é um
 var NOTE_ETAPA='Esta etapa é a mesma que aparece no macroprocesso, só que em tamanho maior. Use "Tamanho real" para ler o texto das caixas e arraste o desenho com o dedo. Os quadros cinza com ⚠ trazem o que foi dito nas visitas e reuniões e ainda não foi confirmado.';
 var MACRO={
   title:'Macroprocesso: o ciclo inteiro entre pavimentos',
-  desc:'As 8 etapas lado a lado, da laje concretada até a próxima laje concretada, com as 8 faixas de equipes. Para ver uma etapa em tamanho maior, clique em "Etapas".',
+  desc:'As 8 etapas lado a lado, da laje concretada até a próxima laje concretada, com as 8 faixas de equipes. Para ver uma etapa em tamanho maior, escolha uma das etapas acima.',
   teams:['Engenharia ATR / Mestre geral','Equipe própria ATR','Seltasul: topografia','Ajax: carpintaria','Ajax: armação','JPM / Elioto: instalações','Evehx: protensão','CDTEC: laboratório'],ext:[],
   half:'bpmn/macroprocesso_meia_escala.png',hw:4995,hh:1277,full:'bpmn/macroprocesso.png',fw:9990,fh:2554,
   alt:'Fluxo BPMN AS-IS do ciclo entre pavimentos da obra Atmos, com 8 faixas de equipes e as 8 etapas, da laje N concretada até a laje N+1 concretada'
@@ -1436,28 +1435,33 @@ var ST=[
   desc:'Começa em "Laje armada" e termina em "Laje concretada". Limpa a laje, confere aço, cabos e embutidos, programa a concreteira e as equipes e concreta (o detalhe da concretagem está na Etapa 0).',
   teams:['Engenharia ATR / Mestre geral','Equipe própria ATR','Ajax: carpintaria','Ajax: armação'],ext:['Concreteira']}
 ];
-var modeBtns=Array.prototype.slice.call(document.querySelectorAll('.bpmn-mode'));
-var stagesBox=document.getElementById('bpmn-stages');
+var picker=document.getElementById('bpmn-picker');
 var zoomBtns=Array.prototype.slice.call(document.querySelectorAll('[data-zoom]'));
 var elTitle=document.getElementById('bpmn-title'),elDesc=document.getElementById('bpmn-desc'),elTeams=document.getElementById('bpmn-teams');
 var elNote=document.getElementById('bpmn-note'),elOpen=document.getElementById('bpmn-open');
 var prev=document.getElementById('bpmn-prev'),next=document.getElementById('bpmn-next');
 var midBtn=document.querySelector('[data-zoom="mid"]'),realBtn=document.querySelector('[data-zoom="real"]');
-var mode='macro',cur=0,zoom='fit';
+/* sel: -1 = macroprocesso; 0..7 = etapa */
+var sel=-1,zoom='fit',opts=[];
 
-ST.forEach(function(e,k){
+function mkOpt(idx,numTxt,label,thumb,wide){
   var b=document.createElement('button');
-  b.type='button';b.className='bpmn-stage';b.setAttribute('role','tab');b.setAttribute('aria-selected','false');
-  b.id='bs-'+e.n;b.setAttribute('aria-controls','bpmn-panel');b.dataset.i=k;b.tabIndex=-1;
-  b.innerHTML='<span class="n">'+e.n+'</span><span>'+e.short+'</span>';
-  b.addEventListener('click',function(){cur=k;render(true)});
+  b.type='button';b.className='bpmn-opt'+(wide?' wide':'');b.setAttribute('role','tab');b.setAttribute('aria-selected','false');
+  b.setAttribute('aria-controls','bpmn-panel');b.dataset.i=idx;b.tabIndex=-1;
+  b.innerHTML='<span class="th"><img src="'+thumb+'" alt="" loading="lazy" decoding="async"></span><span class="lb"><span class="n">'+numTxt+'</span><span>'+label+'</span></span>';
+  b.addEventListener('click',function(){choose(idx)});
   b.addEventListener('keydown',function(ev){
-    var d=ev.key==='ArrowRight'?1:ev.key==='ArrowLeft'?-1:0;
+    var d=(ev.key==='ArrowRight'||ev.key==='ArrowDown')?1:(ev.key==='ArrowLeft'||ev.key==='ArrowUp')?-1:0;
     if(!d)return;ev.preventDefault();
-    cur=(cur+d+ST.length)%ST.length;render(true);document.getElementById('bs-'+ST[cur].n).focus();
+    var t=sel+d;if(t<-1)t=ST.length-1;if(t>ST.length-1)t=-1;
+    choose(t);opts[t+1].focus();
   });
-  stagesBox.appendChild(b);
-});
+  picker.appendChild(b);opts.push(b);
+}
+mkOpt(-1,'Geral','Macroprocesso: o ciclo inteiro','bpmn/miniaturas/macroprocesso.jpg',true);
+ST.forEach(function(e,k){mkOpt(k,String(e.n),e.short,'bpmn/miniaturas/etapa'+e.n+'.jpg',false)});
+
+function choose(i){sel=i;zoom='fit';render(true);var o=opts[i+1];if(o&&o.scrollIntoView&&window.innerWidth<=680)o.scrollIntoView({block:'nearest'})}
 
 function chips(list,ext){
   elTeams.innerHTML='';
@@ -1466,9 +1470,8 @@ function chips(list,ext){
 }
 
 function apply(){
-  var natW,w;
-  var base=view.clientWidth||800;
-  if(mode==='macro'){
+  var w,base=view.clientWidth||800;
+  if(sel<0){
     var useFull=(zoom==='real');
     var src=useFull?MACRO.full:MACRO.half;
     if(img.getAttribute('src')!==src){img.src=src}
@@ -1479,8 +1482,7 @@ function apply(){
     else if(zoom==='mid')w=Math.min(MACRO.hw,Math.round(base*3))+'px';
     else w='6000px';
   }else{
-    var e=ST[cur];
-    var src2='bpmn/etapa'+e.n+'.png';
+    var e=ST[sel],src2='bpmn/etapa'+e.n+'.png';
     if(img.getAttribute('src')!==src2){img.src=src2}
     img.width=e.w;img.height=e.h;
     elOpen.href=src2;
@@ -1492,40 +1494,29 @@ function apply(){
 }
 
 function render(reset){
-  var macro=(mode==='macro');
-  modeBtns.forEach(function(b){var on=b.dataset.mode===mode;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1});
-  stagesBox.hidden=macro;
+  var macro=(sel<0);
+  opts.forEach(function(b,k){var on=(k-1===sel);b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1});
   midBtn.hidden=!macro;
   realBtn.textContent=macro?'Ler os textos':'Tamanho real';
-  prev.hidden=macro;next.hidden=macro;
   if(macro){
     elTitle.textContent=MACRO.title;elDesc.textContent=MACRO.desc;chips(MACRO.teams,MACRO.ext);
     img.alt=MACRO.alt;elNote.textContent=NOTE_MACRO;
-    if(zoom==='mid'&&midBtn.hidden)zoom='fit';
   }else{
-    var e=ST[cur];
+    var e=ST[sel];
     elTitle.textContent=e.title;elDesc.textContent=e.desc;chips(e.teams,e.ext);
     img.alt='Fluxo BPMN da '+e.title.charAt(0).toLowerCase()+e.title.slice(1)+', ciclo entre pavimentos da obra Atmos';
     elNote.textContent=NOTE_ETAPA;
     if(zoom==='mid')zoom='fit';
-    Array.prototype.forEach.call(stagesBox.children,function(b,k){var on=(k===cur);b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1});
-    prev.disabled=(cur===0);next.disabled=(cur===ST.length-1);
   }
+  prev.disabled=(sel<=-1);next.disabled=(sel>=ST.length-1);
   zoomBtns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.zoom===zoom?'true':'false')});
   apply();
   if(reset){view.scrollLeft=0;view.scrollTop=0}
 }
 
-modeBtns.forEach(function(b){
-  b.addEventListener('click',function(){mode=b.dataset.mode;zoom='fit';render(true)});
-  b.addEventListener('keydown',function(ev){
-    if(ev.key!=='ArrowRight'&&ev.key!=='ArrowLeft')return;
-    ev.preventDefault();var o=modeBtns[b===modeBtns[0]?1:0];o.click();o.focus();
-  });
-});
 zoomBtns.forEach(function(b){b.addEventListener('click',function(){zoom=b.dataset.zoom;render(false)})});
-prev.addEventListener('click',function(){if(cur>0){cur--;render(true);var t=document.getElementById('bs-'+ST[cur].n);if(t&&t.scrollIntoView)t.scrollIntoView({block:'nearest'})}});
-next.addEventListener('click',function(){if(cur<ST.length-1){cur++;render(true)}});
+prev.addEventListener('click',function(){if(sel>-1)choose(sel-1)});
+next.addEventListener('click',function(){if(sel<ST.length-1)choose(sel+1)});
 window.addEventListener('resize',function(){if(zoom==='mid')apply()});
 render(false);
 })();
