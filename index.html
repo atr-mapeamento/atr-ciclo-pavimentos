@@ -362,11 +362,31 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .bpmn-read .card h3{margin:0 0 10px;font-size:14px;color:var(--navy-800)}
 .bpmn-lanes{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
 .bpmn-lanes li{font-size:12px;font-weight:600;color:var(--navy-800);background:var(--sky-100);border:1px solid var(--line);border-radius:20px;padding:4px 10px}
+.bpmn-modes{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.bpmn-mode{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;min-height:48px;padding:6px 18px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line-strong);font-size:14px;font-weight:700;color:var(--navy-800);text-align:left;transition:background-color .13s,border-color .13s}
+.bpmn-mode small{font-size:11px;font-weight:500;color:var(--muted)}
+.bpmn-mode:hover{border-color:var(--steel-600);background:var(--sky-100)}
+.bpmn-mode[aria-selected="true"]{background:var(--navy-800);border-color:var(--navy-800);color:#fff}
+.bpmn-mode[aria-selected="true"] small{color:#C6D7F0}
+.bpmn-stages{display:flex;flex-wrap:wrap;gap:7px;padding:10px 12px;margin-bottom:12px;background:var(--sky-50);border:1px solid var(--line);border-radius:var(--r-md)}
+.bpmn-stage{display:inline-flex;align-items:center;gap:7px;padding:4px 12px 4px 5px;border-radius:20px;background:var(--surface);border:1px solid var(--line-strong);font-size:12px;font-weight:600;color:var(--ink-soft);white-space:nowrap;transition:background-color .13s,border-color .13s,color .13s}
+.bpmn-stage .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--sky-100);color:var(--navy-800);font-size:11.5px;font-weight:700}
+.bpmn-stage:hover{border-color:var(--steel-600);color:var(--royal-700)}
+.bpmn-stage[aria-selected="true"]{background:var(--navy-800);border-color:var(--navy-800);color:#fff}
+.bpmn-stage[aria-selected="true"] .n{background:var(--yellow);color:var(--navy-950)}
+.bpmn-head{margin-bottom:12px}
+.bpmn-head h3{margin:0 0 4px;font-size:15px;color:var(--navy-800)}
+.bpmn-head p{font-size:13px;color:var(--ink-soft);line-height:1.6;max-width:90ch}
+.bpmn-head .chips{margin-top:8px}
+.bpmn-head .chip{font-size:11.5px;padding:3px 10px;background:var(--sky-100);border-color:var(--line)}
+.bpmn-head .chip.ext{background:#F3F3F3;border-style:dashed}
+.bpmn-bar .btn[disabled]{opacity:.45;cursor:default}
 /* ===== celular e telas médias ===== */
 @media (max-width:1100px){
   .cycle,.facts{grid-template-columns:repeat(2,minmax(0,1fr))}
   .teams,.att-grid,.chain,.sup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bpmn-mode{flex:1 1 140px}
 }
 @media (max-width:980px){
   .app{grid-template-columns:minmax(0,1fr);grid-template-rows:64px minmax(0,1fr);grid-template-areas:'header' 'main'}
@@ -457,7 +477,7 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
       <a class="btn btn-y" href="#etapas">Ver as etapas</a>
       <a class="btn btn-o" href="#simulador">Simular o prazo</a>
     </div>
-    <p class="hero-meta">Baseado nas visitas de 03, 10 e 17/11/2026, na reunião de 13/11, no médio prazo e no plano semanal S64. Atualizado em 23/11/2026 com o fluxo BPMN do ciclo e o que a ATR contou na visita de 17/11.</p>
+    <p class="hero-meta">Baseado nas visitas de 03, 10 e 17/11/2026, na reunião de 13/11, no médio prazo e no plano semanal S64. Atualizado em 26/11/2026 com o fluxo BPMN do ciclo (macroprocesso e um desenho por etapa) e o que a ATR contou na visita de 17/11.</p>
   </div>
   <div class="tiles" aria-label="Números do ciclo">
     <div class="tile"><b>12</b><span>dias úteis para concretar a laje, com pé-direito baixo</span><em>Meta da obra (dias trabalhados, não corridos)</em></div><div class="tile"><b>15</b><span>dias úteis para concretar a laje, com pé-direito alto</span><em>Meta da obra (dias trabalhados, não corridos)</em></div><div class="tile"><b>~30</b><span>dias corridos por laje com a empreiteira anterior, segundo o engenheiro</span><em>Relato de 13/11, a confirmar</em></div><div class="tile"><b>6º</b><span>pavimento: os pilares começaram em 06/11 (o plano era 05/11) e a concretagem segue marcada para 23/11, com trabalho no feriado de 20/11</span><em>Plano e relatos de 13 e 17/11</em></div>
@@ -517,20 +537,32 @@ td.mono{font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
     <div class="sec-head">
       <p class="eyebrow">Fluxo BPMN</p>
       <h2>O ciclo desenhado como fluxo (AS-IS)</h2>
-      <p>As mesmas 8 etapas, agora mostrando quem faz o quê e o que precisa terminar antes do passo seguinte. Cada faixa é uma equipe. O desenho retrata como o ciclo roda hoje na obra, com as correções de 13/11 e o que a ATR contou em 10 e 17/11. Ainda precisa ser validado com a ATR.</p>
+      <p>As mesmas 8 etapas, agora mostrando quem faz o quê e o que precisa terminar antes do passo seguinte. Cada faixa é uma equipe. Veja o macroprocesso inteiro de uma vez ou escolha uma etapa para ler o desenho dela em tamanho maior. O desenho retrata como o ciclo roda hoje na obra, com as correções de 13/11 e o que a ATR contou em 10 e 17/11. Ainda precisa ser validado com a ATR.</p>
     </div>
-    <div class="card">
-      <div class="bpmn-bar" role="group" aria-label="Tamanho do desenho">
+    <div class="card" id="bpmn-card">
+      <div class="bpmn-modes" role="tablist" aria-label="O que ver do fluxo">
+        <button type="button" class="bpmn-mode" role="tab" id="bm-macro" data-mode="macro" aria-selected="true" aria-controls="bpmn-panel"><span>Macroprocesso</span><small>o ciclo inteiro em um desenho</small></button>
+        <button type="button" class="bpmn-mode" role="tab" id="bm-etapas" data-mode="etapas" aria-selected="false" aria-controls="bpmn-panel"><span>Etapas</span><small>8 desenhos, um por etapa</small></button>
+      </div>
+      <div class="bpmn-stages" id="bpmn-stages" role="tablist" aria-label="Etapas do ciclo" hidden></div>
+      <div class="bpmn-head" id="bpmn-panel" role="tabpanel" aria-live="polite">
+        <h3 id="bpmn-title"></h3>
+        <p id="bpmn-desc"></p>
+        <div class="chips" id="bpmn-teams" aria-label="Equipes que aparecem neste desenho"></div>
+      </div>
+      <div class="bpmn-bar" role="group" aria-label="Tamanho do desenho e navegação">
         <button type="button" class="btn btn-o" data-zoom="fit" aria-pressed="true">Ajustar à largura</button>
         <button type="button" class="btn btn-o" data-zoom="mid" aria-pressed="false">Ampliar</button>
         <button type="button" class="btn btn-o" data-zoom="real" aria-pressed="false">Ler os textos</button>
         <span class="grow"></span>
-        <a class="btn btn-y" href="bpmn-as-is.jpg" target="_blank" rel="noopener">Abrir em tela cheia</a>
+        <button type="button" class="btn btn-o" id="bpmn-prev" hidden>&larr; Etapa anterior</button>
+        <button type="button" class="btn btn-o" id="bpmn-next" hidden>Próxima etapa &rarr;</button>
+        <a class="btn btn-y" id="bpmn-open" href="bpmn/macroprocesso.png" target="_blank" rel="noopener">Abrir em tela cheia</a>
       </div>
-      <div class="bpmn-view" id="bpmn-view" tabindex="0" role="region" aria-label="Fluxo BPMN do ciclo entre pavimentos. Role para os lados e para baixo para ver o desenho todo.">
-        <img id="bpmn-img" src="bpmn-as-is.jpg" width="8000" height="2431" alt="Fluxo BPMN AS-IS do ciclo entre pavimentos da obra Atmos, com 8 faixas de equipes, da laje N concretada até a laje N+1 concretada" loading="lazy" decoding="async">
+      <div class="bpmn-view" id="bpmn-view" tabindex="0" role="region" aria-label="Desenho do fluxo BPMN. Role para os lados e para baixo para ver o desenho todo.">
+        <img id="bpmn-img" src="bpmn/macroprocesso_meia_escala.png" width="4995" height="1277" alt="" decoding="async">
       </div>
-      <p class="note" style="margin-top:10px">Desenho feito no Bizagi Modeler. No celular, use "Ampliar" e arraste o desenho com o dedo, ou abra em tela cheia. Para ler o texto de cada caixa, use "Ler os textos". Os quadros cinza com ⚠ trazem o que foi dito nas visitas e reuniões e ainda não foi confirmado.</p>
+      <p class="note" style="margin-top:10px" id="bpmn-note"></p>
     </div>
     <div class="bpmn-read">
       <div class="card">
@@ -1369,15 +1401,133 @@ spy();
 (function(){
 var view=document.getElementById('bpmn-view'),img=document.getElementById('bpmn-img');
 if(!view||!img)return;
-var btns=Array.prototype.slice.call(document.querySelectorAll('[data-zoom]'));
-function set(z){
-  btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.zoom===z?'true':'false')});
-  if(z==='fit'){img.style.width='100%';view.scrollLeft=0;return}
-  var base=view.clientWidth||800;
-  /* "Ampliar" = 3× a largura da área visível; "Ler os textos" = 4800 px, onde o texto das caixas fica legível */
-  img.style.width=(z==='real'?4800:Math.min(8000,Math.round(base*3)))+'px';
+var NOTE_MACRO='Desenho feito no Bizagi Modeler. Cada retângulo tracejado é uma etapa. No celular, use "Ampliar" e arraste o desenho com o dedo, ou abra em tela cheia. Para ler o texto de cada caixa, use "Ler os textos". Os quadros cinza com ⚠ trazem o que foi dito nas visitas e reuniões e ainda não foi confirmado.';
+var NOTE_ETAPA='Esta etapa é a mesma que aparece no macroprocesso, só que em tamanho maior. Use "Tamanho real" para ler o texto das caixas e arraste o desenho com o dedo. Os quadros cinza com ⚠ trazem o que foi dito nas visitas e reuniões e ainda não foi confirmado.';
+var MACRO={
+  title:'Macroprocesso: o ciclo inteiro entre pavimentos',
+  desc:'As 8 etapas lado a lado, da laje concretada até a próxima laje concretada, com as 8 faixas de equipes. Para ver uma etapa em tamanho maior, clique em "Etapas".',
+  teams:['Engenharia ATR / Mestre geral','Equipe própria ATR','Seltasul: topografia','Ajax: carpintaria','Ajax: armação','JPM / Elioto: instalações','Evehx: protensão','CDTEC: laboratório'],ext:[],
+  half:'bpmn/macroprocesso_meia_escala.png',hw:4995,hh:1277,full:'bpmn/macroprocesso.png',fw:9990,fh:2554,
+  alt:'Fluxo BPMN AS-IS do ciclo entre pavimentos da obra Atmos, com 8 faixas de equipes e as 8 etapas, da laje N concretada até a laje N+1 concretada'
+};
+var ST=[
+ {n:0,short:'Concretagem',title:'Etapa 0 – Concretagem da laje anterior',w:1629,h:1075,
+  desc:'Começa com a concretagem programada e termina em "Laje concretada". Confere aço, reforços e embutidos, avalia o clima, lança e adensa o concreto, e o laboratório molda os corpos de prova.',
+  teams:['Engenharia ATR / Mestre geral','Ajax: carpintaria','Ajax: armação','CDTEC: laboratório'],ext:['Concreteira']},
+ {n:1,short:'Pilares',title:'Etapa 1 – Pilares',w:1701,h:1258,
+  desc:'Começa em "Laje concretada" e termina em "Pilares prontos". Desforma as vigas, loca os eixos, recebe o aço, monta a armação (na gaiola ou no local) e fecha as formas dos pilares.',
+  teams:['Engenharia ATR / Mestre geral','Equipe própria ATR','Seltasul: topografia','Ajax: carpintaria','Ajax: armação'],ext:['Fornecedor de aço']},
+ {n:2,short:'Protensão',title:'Etapa 2 – Protensão',w:1332,h:571,
+  desc:'Começa em "Laje concretada e vigas desformadas" e termina em "Laje protendida". O laboratório rompe os corpos de prova depois de 3 dias de cura; com o resultado liberado, a Evehx tensiona os cabos.',
+  teams:['Evehx: protensão','CDTEC: laboratório'],ext:[]},
+ {n:3,short:'Reescoramento',title:'Etapa 3 – Reescoramento',w:1692,h:681,
+  desc:'Começa em "Laje protendida" e termina em "Laje reescorada". Alivia e retira as escoras dos níveis de baixo, sobe ao pavimento de cima e confere o saldo, pedindo mais ao fornecedor quando falta.',
+  teams:['Equipe própria ATR','Ajax: carpintaria'],ext:['Fornecedor de escoras']},
+ {n:4,short:'Assoalho e linha de vida',title:'Etapa 4 – Assoalho (deck), vigas e linha de vida',w:1863,h:952,
+  desc:'Começa em "Laje reescorada" e termina em "Deck e linha de vida prontos". Monta o conjunto de escoras e painéis, o deck e a forma da viga de borda, enquanto sobe a linha de vida, o guarda-corpo e as telas.',
+  teams:['Engenharia ATR / Mestre geral','Equipe própria ATR','Ajax: carpintaria','Ajax: armação'],ext:[]},
+ {n:5,short:'Arremates',title:'Etapa 5 – Arremates e marcação das paredes',w:1170,h:430,
+  desc:'Começa em "Deck e linha de vida prontos" e termina em "Laje pronta para a armação". Instala o perfil de arremate, fecha as laterais das vigas e fita as emendas do deck, enquanto as instalações marcam as paredes.',
+  teams:['Ajax: carpintaria','JPM / Elioto: instalações'],ext:[]},
+ {n:6,short:'Armação e embutidos',title:'Etapa 6 – Armação, cabos e infraestrutura embutida',w:2340,h:918,
+  desc:'Começa em "Laje pronta para a armação" e termina em "Laje armada". Recebe aço e cabos, posiciona armaduras, tela, reforços, cabos de protensão e ferros negativos, com caixas e mangueiras elétricas no meio.',
+  teams:['Equipe própria ATR','Ajax: armação','JPM / Elioto: instalações'],ext:['Fornecedor de aço e cabos']},
+ {n:7,short:'Conferência e concretagem',title:'Etapa 7 – Conferência e nova concretagem',w:1755,h:1134,
+  desc:'Começa em "Laje armada" e termina em "Laje concretada". Limpa a laje, confere aço, cabos e embutidos, programa a concreteira e as equipes e concreta (o detalhe da concretagem está na Etapa 0).',
+  teams:['Engenharia ATR / Mestre geral','Equipe própria ATR','Ajax: carpintaria','Ajax: armação'],ext:['Concreteira']}
+];
+var modeBtns=Array.prototype.slice.call(document.querySelectorAll('.bpmn-mode'));
+var stagesBox=document.getElementById('bpmn-stages');
+var zoomBtns=Array.prototype.slice.call(document.querySelectorAll('[data-zoom]'));
+var elTitle=document.getElementById('bpmn-title'),elDesc=document.getElementById('bpmn-desc'),elTeams=document.getElementById('bpmn-teams');
+var elNote=document.getElementById('bpmn-note'),elOpen=document.getElementById('bpmn-open');
+var prev=document.getElementById('bpmn-prev'),next=document.getElementById('bpmn-next');
+var midBtn=document.querySelector('[data-zoom="mid"]'),realBtn=document.querySelector('[data-zoom="real"]');
+var mode='macro',cur=0,zoom='fit';
+
+ST.forEach(function(e,k){
+  var b=document.createElement('button');
+  b.type='button';b.className='bpmn-stage';b.setAttribute('role','tab');b.setAttribute('aria-selected','false');
+  b.id='bs-'+e.n;b.setAttribute('aria-controls','bpmn-panel');b.dataset.i=k;b.tabIndex=-1;
+  b.innerHTML='<span class="n">'+e.n+'</span><span>'+e.short+'</span>';
+  b.addEventListener('click',function(){cur=k;render(true)});
+  b.addEventListener('keydown',function(ev){
+    var d=ev.key==='ArrowRight'?1:ev.key==='ArrowLeft'?-1:0;
+    if(!d)return;ev.preventDefault();
+    cur=(cur+d+ST.length)%ST.length;render(true);document.getElementById('bs-'+ST[cur].n).focus();
+  });
+  stagesBox.appendChild(b);
+});
+
+function chips(list,ext){
+  elTeams.innerHTML='';
+  list.forEach(function(t){var c=document.createElement('span');c.className='chip';c.textContent=t;elTeams.appendChild(c)});
+  ext.forEach(function(t){var c=document.createElement('span');c.className='chip ext';c.textContent=t+' (externo)';elTeams.appendChild(c)});
 }
-btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.zoom)})});
+
+function apply(){
+  var natW,w;
+  var base=view.clientWidth||800;
+  if(mode==='macro'){
+    var useFull=(zoom==='real');
+    var src=useFull?MACRO.full:MACRO.half;
+    if(img.getAttribute('src')!==src){img.src=src}
+    img.width=useFull?MACRO.fw:MACRO.hw;img.height=useFull?MACRO.fh:MACRO.hh;
+    elOpen.href=MACRO.full;
+    if(zoom==='fit')w='100%';
+    /* "Ampliar" = 3× a largura da área visível; "Ler os textos" = 6000 px do desenho em resolução cheia */
+    else if(zoom==='mid')w=Math.min(MACRO.hw,Math.round(base*3))+'px';
+    else w='6000px';
+  }else{
+    var e=ST[cur];
+    var src2='bpmn/etapa'+e.n+'.png';
+    if(img.getAttribute('src')!==src2){img.src=src2}
+    img.width=e.w;img.height=e.h;
+    elOpen.href=src2;
+    /* nas etapas, "Tamanho real" mostra o desenho no tamanho em que foi exportado (o texto fica legível) */
+    w=(zoom==='fit')?'100%':e.w+'px';
+  }
+  img.style.width=w;
+  if(zoom==='fit')view.scrollLeft=0;
+}
+
+function render(reset){
+  var macro=(mode==='macro');
+  modeBtns.forEach(function(b){var on=b.dataset.mode===mode;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1});
+  stagesBox.hidden=macro;
+  midBtn.hidden=!macro;
+  realBtn.textContent=macro?'Ler os textos':'Tamanho real';
+  prev.hidden=macro;next.hidden=macro;
+  if(macro){
+    elTitle.textContent=MACRO.title;elDesc.textContent=MACRO.desc;chips(MACRO.teams,MACRO.ext);
+    img.alt=MACRO.alt;elNote.textContent=NOTE_MACRO;
+    if(zoom==='mid'&&midBtn.hidden)zoom='fit';
+  }else{
+    var e=ST[cur];
+    elTitle.textContent=e.title;elDesc.textContent=e.desc;chips(e.teams,e.ext);
+    img.alt='Fluxo BPMN da '+e.title.charAt(0).toLowerCase()+e.title.slice(1)+', ciclo entre pavimentos da obra Atmos';
+    elNote.textContent=NOTE_ETAPA;
+    if(zoom==='mid')zoom='fit';
+    Array.prototype.forEach.call(stagesBox.children,function(b,k){var on=(k===cur);b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1});
+    prev.disabled=(cur===0);next.disabled=(cur===ST.length-1);
+  }
+  zoomBtns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.zoom===zoom?'true':'false')});
+  apply();
+  if(reset){view.scrollLeft=0;view.scrollTop=0}
+}
+
+modeBtns.forEach(function(b){
+  b.addEventListener('click',function(){mode=b.dataset.mode;zoom='fit';render(true)});
+  b.addEventListener('keydown',function(ev){
+    if(ev.key!=='ArrowRight'&&ev.key!=='ArrowLeft')return;
+    ev.preventDefault();var o=modeBtns[b===modeBtns[0]?1:0];o.click();o.focus();
+  });
+});
+zoomBtns.forEach(function(b){b.addEventListener('click',function(){zoom=b.dataset.zoom;render(false)})});
+prev.addEventListener('click',function(){if(cur>0){cur--;render(true);var t=document.getElementById('bs-'+ST[cur].n);if(t&&t.scrollIntoView)t.scrollIntoView({block:'nearest'})}});
+next.addEventListener('click',function(){if(cur<ST.length-1){cur++;render(true)}});
+window.addEventListener('resize',function(){if(zoom==='mid')apply()});
+render(false);
 })();
 </script>
 </body>
